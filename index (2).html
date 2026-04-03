@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Sund AI – AI-automatisering for bedrifter</title>
+  <meta name="description" content="Vi hjelper små og mellomstore bedrifter med å øke inntekten og spare tid ved hjelp av AI og automatisering. Chatbots, lead-generering og kundeservice – 24/7." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #456396;
+      --blue-dark: #2e4570;
+      --blue-light: #5a7ab5;
+      --blue-pale: #dce6f5;
+      --white: #ffffff;
+      --off-white: #f7f9fc;
+      --gray-light: #eef1f7;
+      --gray: #8a96a8;
+      --text: #1a2235;
+      --text-soft: #4a5568;
+      --accent: #e8f0fc;
+      --font-head: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 32px rgba(69,99,150,0.10);
+      --shadow-lg: 0 16px 64px rgba(69,99,150,0.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(69,99,150,0.08);
+      transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: 0 4px 32px rgba(69,99,150,0.10); }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 38px; height: 38px;
+      background: var(--blue);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon svg { width: 22px; height: 22px; fill: white; }
+    .logo-text {
+      font-family: var(--font-head);
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--blue);
+      letter-spacing: -0.02em;
+    }
+    .logo-text span { color: var(--blue-light); }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-soft);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+      letter-spacing: 0.01em;
+    }
+    .nav-links a:hover { color: var(--blue); }
+
+    .nav-cta {
+      background: var(--blue);
+      color: white !important;
+      padding: 10px 22px;
+      border-radius: 50px;
+      font-weight: 600 !important;
+      font-size: 0.88rem !important;
+      transition: background 0.2s, transform 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--blue-dark) !important; transform: translateY(-1px); }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 2px; background: var(--blue); border-radius: 2px; transition: 0.3s; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 40px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #f0f5ff 0%, #ffffff 55%, #e8f0fc 100%);
+      z-index: 0;
+    }
+
+    .hero-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+      z-index: 1;
+    }
+    .hero-blob-1 {
+      width: 600px; height: 600px;
+      background: var(--blue);
+      top: -100px; right: -100px;
+      animation: blobFloat 8s ease-in-out infinite;
+    }
+    .hero-blob-2 {
+      width: 400px; height: 400px;
+      background: var(--blue-light);
+      bottom: -80px; left: 10%;
+      animation: blobFloat 10s ease-in-out infinite reverse;
+    }
+    @keyframes blobFloat {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(20px, -20px) scale(1.05); }
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(69,99,150,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(69,99,150,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      border: 1px solid rgba(69,99,150,0.2);
+      color: var(--blue);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 7px 16px;
+      border-radius: 50px;
+      margin-bottom: 24px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 7px; height: 7px;
+      background: var(--blue);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 24px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    h1 .highlight {
+      color: var(--blue);
+      position: relative;
+      display: inline-block;
+    }
+    h1 .highlight::after {
+      content: '';
+      position: absolute;
+      bottom: 4px; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--blue), var(--blue-light));
+      border-radius: 2px;
+      opacity: 0.35;
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--text-soft);
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 40px;
+      font-weight: 300;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+      padding: 15px 32px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(69,99,150,0.3);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { background: var(--blue-dark); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(69,99,150,0.35); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--blue);
+      padding: 15px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border: 2px solid rgba(69,99,150,0.25);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-secondary:hover { border-color: var(--blue); background: var(--accent); transform: translateY(-2px); }
+
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 48px;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+    .stat { }
+    .stat-num {
+      font-family: var(--font-head);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--blue);
+      letter-spacing: -0.02em;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--gray);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    /* Hero Visual */
+    .hero-visual {
+      position: relative;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-card-main {
+      background: white;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(69,99,150,0.08);
+      position: relative;
+      z-index: 2;
+    }
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .chat-avatar {
+      width: 40px; height: 40px;
+      background: var(--blue);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head);
+      font-weight: 800;
+      color: white;
+      font-size: 0.85rem;
+    }
+    .chat-name { font-weight: 600; font-size: 0.9rem; }
+    .chat-status { font-size: 0.75rem; color: #22c55e; }
+    .chat-dot { display: inline-block; width: 7px; height: 7px; background: #22c55e; border-radius: 50%; margin-right: 5px; }
+
+    .chat-bubble {
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin-bottom: 10px;
+      max-width: 85%;
+    }
+    .chat-bubble.bot {
+      background: var(--accent);
+      color: var(--text);
+      border-bottom-left-radius: 4px;
+    }
+    .chat-bubble.user {
+      background: var(--blue);
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+    }
+    .chat-time { font-size: 0.7rem; color: var(--gray); text-align: right; margin-top: 4px; }
+
+    .typing {
+      display: flex; gap: 5px; align-items: center;
+      padding: 12px 16px;
+      background: var(--accent);
+      border-radius: 14px;
+      width: fit-content;
+      border-bottom-left-radius: 4px;
+    }
+    .typing span {
+      width: 7px; height: 7px;
+      background: var(--blue);
+      border-radius: 50%;
+      opacity: 0.5;
+      animation: typingDot 1.2s infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingDot { 0%, 100% { opacity: 0.2; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+
+    .hero-badge-float {
+      position: absolute;
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 12px 18px;
+      box-shadow: var(--shadow-lg);
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: flex; align-items: center; gap: 10px;
+      border: 1px solid rgba(69,99,150,0.08);
+      z-index: 3;
+      animation: floatBadge 3s ease-in-out infinite;
+    }
+    @keyframes floatBadge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    .hero-badge-float.b1 { top: -20px; right: -20px; animation-delay: 0s; }
+    .hero-badge-float.b2 { bottom: 20px; left: -30px; animation-delay: 1.5s; }
+    .badge-icon { font-size: 1.2rem; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── SECTION BASE ── */
+    section { padding: 100px 40px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .section-tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--blue);
+      background: var(--accent);
+      border: 1px solid rgba(69,99,150,0.15);
+      padding: 6px 14px;
+      border-radius: 50px;
+      margin-bottom: 16px;
+    }
+    h2 {
+      font-family: var(--font-head);
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--text-soft);
+      line-height: 1.7;
+      font-weight: 300;
+      max-width: 560px;
+    }
+
+    /* ── LOGOS / SOCIAL PROOF ── */
+    #social-proof {
+      padding: 48px 40px;
+      background: var(--off-white);
+      border-top: 1px solid var(--gray-light);
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .proof-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .proof-label { font-size: 0.82rem; font-weight: 600; color: var(--gray); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+    .proof-divider { width: 1px; height: 32px; background: var(--gray-light); }
+    .proof-items { display: flex; gap: 36px; flex-wrap: wrap; align-items: center; }
+    .proof-item { font-family: var(--font-head); font-weight: 700; font-size: 1.1rem; color: rgba(69,99,150,0.35); letter-spacing: -0.02em; transition: color 0.2s; }
+    .proof-item:hover { color: var(--blue); }
+
+    /* ── PROBLEMS / WHY ── */
+    #why { background: white; }
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .problems-list { margin-top: 32px; display: flex; flex-direction: column; gap: 16px; }
+    .problem-item {
+      display: flex;
+      gap: 16px;
+      padding: 20px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--gray-light);
+      background: var(--off-white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      cursor: default;
+    }
+    .problem-item:hover { border-color: rgba(69,99,150,0.2); box-shadow: var(--shadow); }
+    .problem-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      background: #fff5f5;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .problem-text h4 { font-weight: 600; font-size: 0.92rem; margin-bottom: 4px; }
+    .problem-text p { font-size: 0.85rem; color: var(--text-soft); line-height: 1.5; }
+
+    .why-visual {
+      position: relative;
+    }
+    .result-card {
+      background: white;
+      border: 1px solid var(--gray-light);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .result-card:hover { transform: translateX(6px); box-shadow: var(--shadow-lg); }
+    .result-icon {
+      width: 48px; height: 48px;
+      background: var(--accent);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .result-label { font-size: 0.82rem; color: var(--gray); font-weight: 500; }
+    .result-value { font-family: var(--font-head); font-size: 1.3rem; font-weight: 800; color: var(--blue); }
+
+    /* ── SERVICES ── */
+    #services { background: var(--off-white); }
+    .services-header { max-width: 600px; margin-bottom: 60px; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .service-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      border: 1px solid var(--gray-light);
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--blue-light));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .service-card:hover { border-color: rgba(69,99,150,0.2); box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+    .service-card:hover::before { opacity: 1; }
+    .service-num {
+      font-family: var(--font-head);
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--blue-pale);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .service-icon-wrap {
+      width: 52px; height: 52px;
+      background: var(--accent);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      transition: background 0.2s;
+    }
+    .service-card:hover .service-icon-wrap { background: var(--blue); }
+    .service-card:hover .service-icon-wrap span { filter: brightness(10); }
+    .service-title { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+    .service-desc { font-size: 0.88rem; color: var(--text-soft); line-height: 1.65; }
+
+    /* ── PROCESS ── */
+    #process { background: white; }
+    .process-header { text-align: center; max-width: 600px; margin: 0 auto 60px; }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+    }
+    .process-steps::before {
+      content: '';
+      position: absolute;
+      top: 32px;
+      left: 12.5%;
+      right: 12.5%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue-pale), var(--blue), var(--blue-pale));
+      z-index: 0;
+    }
+    .process-step {
+      text-align: center;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .step-num {
+      width: 64px; height: 64px;
+      background: white;
+      border: 3px solid var(--blue);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--blue);
+      margin: 0 auto 24px;
+      box-shadow: 0 0 0 6px white;
+      transition: background 0.3s, color 0.3s;
+    }
+    .process-step:hover .step-num { background: var(--blue); color: white; }
+    .step-title { font-family: var(--font-head); font-weight: 700; font-size: 1rem; margin-bottom: 8px; }
+    .step-desc { font-size: 0.84rem; color: var(--text-soft); line-height: 1.6; }
+
+    /* ── PRICING ── */
+    #pricing { background: linear-gradient(180deg, var(--off-white) 0%, white 100%); }
+    .pricing-header { text-align: center; max-width: 600px; margin: 0 auto 60px; }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .pricing-card {
+      background: white;
+      border: 1px solid var(--gray-light);
+      border-radius: 20px;
+      padding: 36px 32px;
+      position: relative;
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex; flex-direction: column;
+    }
+    .pricing-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+
+    .pricing-card.featured {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: white;
+      transform: scale(1.03);
+      box-shadow: 0 24px 64px rgba(69,99,150,0.35);
+    }
+    .pricing-card.featured:hover { transform: scale(1.03) translateY(-6px); }
+
+    .featured-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fbbf24;
+      color: #7c4a00;
+      font-size: 0.73rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 50px;
+      white-space: nowrap;
+    }
+
+    .pricing-name {
+      font-family: var(--font-head);
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .pricing-tagline {
+      font-size: 0.82rem;
+      opacity: 0.7;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .pricing-price {
+      font-family: var(--font-head);
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+    .pricing-price span { font-size: 1rem; font-weight: 400; opacity: 0.6; }
+    .pricing-summary {
+      font-size: 0.82rem;
+      opacity: 0.75;
+      margin-bottom: 28px;
+      line-height: 1.5;
+      padding: 12px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+    }
+    .pricing-card:not(.featured) .pricing-summary {
+      background: var(--off-white);
+    }
+    .pricing-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.15);
+      margin-bottom: 24px;
+    }
+    .pricing-card:not(.featured) .pricing-divider { background: var(--gray-light); }
+
+    .pricing-features { list-style: none; flex: 1; margin-bottom: 32px; }
+    .pricing-features li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 0.88rem;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .pricing-features li::before {
+      content: '✓';
+      width: 20px; height: 20px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .pricing-card:not(.featured) .pricing-features li::before {
+      background: var(--accent);
+      color: var(--blue);
+    }
+
+    .pricing-btn {
+      display: block;
+      text-align: center;
+      padding: 14px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      margin-top: auto;
+    }
+    .pricing-card.featured .pricing-btn {
+      background: white;
+      color: var(--blue);
+    }
+    .pricing-card.featured .pricing-btn:hover {
+      background: var(--off-white);
+    }
+    .pricing-card:not(.featured) .pricing-btn {
+      background: var(--blue);
+      color: white;
+    }
+    .pricing-card:not(.featured) .pricing-btn:hover {
+      background: var(--blue-dark);
+    }
+
+    /* ── TESTIMONIALS ── */
+    #testimonials { background: var(--off-white); }
+    .test-header { max-width: 500px; margin-bottom: 52px; }
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .test-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 28px;
+      border: 1px solid var(--gray-light);
+      box-shadow: var(--shadow);
+      transition: transform 0.2s;
+    }
+    .test-card:hover { transform: translateY(-4px); }
+    .stars { color: #fbbf24; font-size: 1rem; margin-bottom: 14px; letter-spacing: 2px; }
+    .test-quote { font-size: 0.92rem; color: var(--text-soft); line-height: 1.7; margin-bottom: 20px; font-style: italic; }
+    .test-author { display: flex; align-items: center; gap: 12px; }
+    .test-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head);
+      font-weight: 700;
+      color: white;
+      font-size: 0.85rem;
+    }
+    .test-name { font-weight: 600; font-size: 0.88rem; }
+    .test-role { font-size: 0.78rem; color: var(--gray); }
+
+    /* ── FAQ ── */
+    #faq { background: white; }
+    .faq-inner { max-width: 760px; margin: 0 auto; }
+    .faq-header { margin-bottom: 48px; }
+    .faq-item {
+      border: 1px solid var(--gray-light);
+      border-radius: var(--radius-sm);
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    .faq-item:hover { box-shadow: var(--shadow); }
+    .faq-q {
+      padding: 20px 24px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      user-select: none;
+      transition: color 0.2s;
+    }
+    .faq-q:hover { color: var(--blue); }
+    .faq-q.active { color: var(--blue); }
+    .faq-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--off-white);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.1rem;
+      transition: background 0.2s, transform 0.3s;
+    }
+    .faq-q.active .faq-icon { background: var(--blue); color: white; transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s;
+      padding: 0 24px;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      line-height: 1.7;
+    }
+    .faq-a.open { max-height: 300px; padding: 0 24px 20px; }
+
+    /* ── CTA SECTION ── */
+    #cta {
+      background: var(--blue);
+      padding: 100px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.15;
+    }
+    .cta-blob-1 { width: 500px; height: 500px; background: white; top: -100px; right: -80px; }
+    .cta-blob-2 { width: 300px; height: 300px; background: var(--blue-light); bottom: -80px; left: 10%; }
+    .cta-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .cta-inner h2 { color: white; margin-bottom: 16px; }
+    .cta-inner p { color: rgba(255,255,255,0.8); font-size: 1.05rem; line-height: 1.7; margin-bottom: 40px; }
+    .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-white {
+      background: white;
+      color: var(--blue);
+      padding: 15px 32px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(0,0,0,0.2); }
+    .btn-outline-white {
+      background: transparent;
+      color: white;
+      padding: 15px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border: 2px solid rgba(255,255,255,0.4);
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-outline-white:hover { border-color: white; background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--off-white); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .contact-info h2 { margin-bottom: 16px; }
+    .contact-info p { font-size: 1rem; color: var(--text-soft); line-height: 1.7; margin-bottom: 32px; }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      font-size: 0.92rem;
+    }
+    .contact-item-icon {
+      width: 40px; height: 40px;
+      background: var(--accent);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .contact-item a { color: var(--blue); font-weight: 600; text-decoration: none; }
+    .contact-item a:hover { text-decoration: underline; }
+
+    .contact-form {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      border: 1px solid var(--gray-light);
+      box-shadow: var(--shadow);
+    }
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--gray-light);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: var(--text);
+      background: var(--off-white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      appearance: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(69,99,150,0.1);
+      background: white;
+    }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-submit {
+      width: 100%;
+      padding: 16px;
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(69,99,150,0.3);
+    }
+    .form-submit:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: 0 8px 32px rgba(69,99,150,0.35); }
+    .form-note { font-size: 0.78rem; color: var(--gray); text-align: center; margin-top: 12px; }
+
+    /* Success message */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 32px;
+    }
+    .form-success .success-icon {
+      width: 64px; height: 64px;
+      background: #dcfce7;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 16px;
+    }
+    .form-success h3 { font-family: var(--font-head); font-weight: 700; margin-bottom: 8px; }
+    .form-success p { color: var(--text-soft); font-size: 0.9rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text);
+      padding: 60px 40px 36px;
+      color: rgba(255,255,255,0.7);
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .footer-brand .logo-text { color: white; }
+    .footer-desc { font-size: 0.85rem; line-height: 1.7; margin: 16px 0 24px; }
+    .footer-email {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.07);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .footer-email:hover { background: rgba(255,255,255,0.12); color: white; }
+    .footer-col h4 {
+      font-family: var(--font-head);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 16px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-col ul li a:hover { color: white; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-bottom p { font-size: 0.82rem; }
+    .footer-bottom a { color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.2s; }
+    .footer-bottom a:hover { color: white; }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: white; padding: 20px; gap: 20px; border-bottom: 1px solid var(--gray-light); box-shadow: var(--shadow); }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      section { padding: 72px 24px; }
+      #hero { padding: 100px 24px 72px; }
+      .hero-content { grid-template-columns: 1fr; gap: 48px; }
+      .hero-visual { order: -1; }
+      .hero-badge-float.b1 { top: -12px; right: 0; }
+      .hero-badge-float.b2 { display: none; }
+      .why-grid { grid-template-columns: 1fr; gap: 40px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .process-steps { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+      .process-steps::before { display: none; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .pricing-card.featured { transform: none; }
+      .test-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .form-row { grid-template-columns: 1fr; }
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.8rem; }
+      .hero-stats { flex-wrap: wrap; gap: 20px; }
+    }
+    @media (max-width: 600px) {
+      .footer-top { grid-template-columns: 1fr; }
+      .proof-items { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="navbar">
+  <a href="#" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" opacity="0"/>
+        <circle cx="9" cy="12" r="1.5"/>
+        <circle cx="15" cy="12" r="1.5"/>
+        <path d="M7 8.5c.5-1.5 2-2.5 3.5-2.5h3c1.5 0 3 1 3.5 2.5" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M7 15.5c.5 1.5 2 2.5 3.5 2.5h3c1.5 0 3-1 3.5-2.5" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="logo-text">SSAI<span>.</span></span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#why">Hvorfor oss</a></li>
+    <li><a href="#services">Tjenester</a></li>
+    <li><a href="#process">Prosess</a></li>
+    <li><a href="#pricing">Pakker</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact" class="nav-cta">Kom i gang →</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-blob hero-blob-1"></div>
+  <div class="hero-blob hero-blob-2"></div>
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-badge">AI-automatisering for norske bedrifter</div>
+      <h1>La AI jobbe<br/>mens du <span class="highlight">vokser</span></h1>
+      <p class="hero-desc">Vi hjelper små og mellomstore bedrifter med å øke inntekten og spare tid. Automatisert kundedialog, lead-generering og smarte systemer – 24 timer i døgnet.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Få gratis analyse →</a>
+        <a href="#pricing" class="btn-secondary">Se pakker</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">24/7</div>
+          <div class="stat-label">Tilgjengelighet</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">3x</div>
+          <div class="stat-label">Raskere respons</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">40%</div>
+          <div class="stat-label">Mer konvertering</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-badge-float b1">
+        <span class="badge-icon">⚡</span>
+        <div>
+          <div style="font-size:0.75rem;color:var(--gray);font-weight:500">Responstid</div>
+          <div style="color:var(--blue)">Under 2 sekunder</div>
+        </div>
+      </div>
+      <div class="hero-card-main">
+        <div class="chat-header">
+          <div class="chat-avatar">AI</div>
+          <div>
+            <div class="chat-name">Simple Sund AI-assistent</div>
+            <div class="chat-status"><span class="chat-dot"></span>Aktiv nå</div>
+          </div>
+        </div>
+        <div class="chat-bubble user">Hei! Jeg ønsker å bestille time til neste uke</div>
+        <div class="chat-bubble bot">Hei! Så bra du kontakter oss 😊 Jeg kan hjelpe deg med booking. Hvilken dag passer best for deg?</div>
+        <div class="chat-bubble user">Tirsdag eller onsdag</div>
+        <div class="typing"><span></span><span></span><span></span></div>
+        <div class="chat-time">AI svarer alltid – uansett tid</div>
+      </div>
+      <div class="hero-badge-float b2">
+        <span class="badge-icon">📈</span>
+        <div>
+          <div style="font-size:0.75rem;color:var(--gray);font-weight:500">Konvertering</div>
+          <div style="color:#22c55e;font-weight:700">+42% denne måneden</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SOCIAL PROOF ── -->
+<div id="social-proof">
+  <div class="proof-inner">
+    <span class="proof-label">Bransjer vi jobber med</span>
+    <div class="proof-divider"></div>
+    <div class="proof-items">
+      <span class="proof-item">Klinikker</span>
+      <span class="proof-item">Eiendom</span>
+      <span class="proof-item">E-handel</span>
+      <span class="proof-item">Tannleger</span>
+      <span class="proof-item">Advokater</span>
+      <span class="proof-item">Regnskap</span>
+      <span class="proof-item">Frisører</span>
+      <span class="proof-item">Konsulenter</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── WHY ── -->
+<section id="why">
+  <div class="container">
+    <div class="why-grid">
+      <div>
+        <div class="section-tag">Problemet</div>
+        <h2>Bedrifter mister kunder hver dag</h2>
+        <p class="section-sub">De fleste SMB-er svarer ikke raskt nok, har ingen automatisk oppfølging, og bruker timer på manuelt arbeid som AI kan gjøre på sekunder.</p>
+        <div class="problems-list">
+          <div class="problem-item reveal">
+            <div class="problem-icon">⏰</div>
+            <div class="problem-text">
+              <h4>For sen respons</h4>
+              <p>78% av kunder velger den bedriften som svarer først. Mister du dem til konkurrenten?</p>
+            </div>
+          </div>
+          <div class="problem-item reveal reveal-delay-1">
+            <div class="problem-icon">🔄</div>
+            <div class="problem-text">
+              <h4>Ingen oppfølging av leads</h4>
+              <p>Leads som ikke følges opp innen 5 minutter har 90% lavere sjanse for å konvertere.</p>
+            </div>
+          </div>
+          <div class="problem-item reveal reveal-delay-2">
+            <div class="problem-icon">🏋️</div>
+            <div class="problem-text">
+              <h4>Manuelt arbeid stjeler tid</h4>
+              <p>Timer brukt på e-post, booking og svar kan automatiseres – og gi deg tid til det som virkelig gir vekst.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="why-visual">
+        <div class="result-card reveal">
+          <div class="result-icon">💬</div>
+          <div>
+            <div class="result-label">Automatisert kundedialog</div>
+            <div class="result-value">24/7 – alltid tilgjengelig</div>
+          </div>
+        </div>
+        <div class="result-card reveal reveal-delay-1">
+          <div class="result-icon">📅</div>
+          <div>
+            <div class="result-label">Bookinger automatisk</div>
+            <div class="result-value">Rett i kalenderen din</div>
+          </div>
+        </div>
+        <div class="result-card reveal reveal-delay-2">
+          <div class="result-icon">🎯</div>
+          <div>
+            <div class="result-label">Lead-oppfølging</div>
+            <div class="result-value">Ingen lead faller gjennom</div>
+          </div>
+        </div>
+        <div class="result-card reveal reveal-delay-3">
+          <div class="result-icon">⏱️</div>
+          <div>
+            <div class="result-label">Tidsbesparelse</div>
+            <div class="result-value">Tilsvarende 2+ ansatte</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section id="services">
+  <div class="container">
+    <div class="services-header">
+      <div class="section-tag">Hva vi gjør</div>
+      <h2>AI-løsninger som gir reelle resultater</h2>
+      <p class="section-sub">Vi bygger skreddersydde systemer tilpasset din bedrift – ikke generiske verktøy.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-icon-wrap"><span>🤖</span></div>
+        <div class="service-title">AI-chatbot på nettsiden</div>
+        <p class="service-desc">En intelligent assistent som svarer på spørsmål, kvalifiserer leads og booker møter – uten at du løfter en finger.</p>
+      </div>
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-icon-wrap"><span>📲</span></div>
+        <div class="service-title">Sosiale medier & e-post</div>
+        <p class="service-desc">Automatisk svar på Instagram, Messenger og e-post. Aldri en henvendelse som faller mellom to stoler igjen.</p>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-icon-wrap"><span>📞</span></div>
+        <div class="service-title">AI telefoniassistent</div>
+        <p class="service-desc">Menneskelig og naturlig AI som tar telefoner, besvarer spørsmål og viderekobler – tilgjengelig døgnet rundt.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon-wrap"><span>🎯</span></div>
+        <div class="service-title">Lead-generering & CRM</div>
+        <p class="service-desc">Automatisert oppfølging av leads med personlige meldinger, påminnelser og CRM-integrasjon – alle leads følges opp.</p>
+      </div>
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-icon-wrap"><span>📅</span></div>
+        <div class="service-title">Automatisk booking</div>
+        <p class="service-desc">Kunder booker tid direkte i kalenderen din. Automatiske bekreftelser og påminnelser – ingen no-shows.</p>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-icon-wrap"><span>⚙️</span></div>
+        <div class="service-title">Interne automatiseringer</div>
+        <p class="service-desc">Rapporter, fakturaer, onboarding og administrative oppgaver – automatisert slik at teamet ditt kan fokusere på vekst.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROCESS ── -->
+<section id="process">
+  <div class="container">
+    <div class="process-header reveal">
+      <div class="section-tag">Slik jobber vi</div>
+      <h2>Fra første samtale til resultater – på rekordtid</h2>
+    </div>
+    <div class="process-steps">
+      <div class="process-step reveal">
+        <div class="step-num">1</div>
+        <div class="step-title">Gratis analyse</div>
+        <p class="step-desc">Vi kartlegger bedriften din, identifiserer flaskehalser og foreslår konkrete løsninger.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-1">
+        <div class="step-num">2</div>
+        <div class="step-title">Skreddersydd plan</div>
+        <p class="step-desc">Du får en tilpasset strategi og velger pakken som passer best for dine behov.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-2">
+        <div class="step-num">3</div>
+        <div class="step-title">Implementering</div>
+        <p class="step-desc">Vi bygger og setter opp systemene. Du trenger ikke gjøre noe teknisk selv.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-3">
+        <div class="step-num">4</div>
+        <div class="step-title">Vekst & optimalisering</div>
+        <p class="step-desc">Vi overvåker, justerer og forbedrer løpende. Ditt system blir bedre over tid.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section id="pricing">
+  <div class="container">
+    <div class="pricing-header reveal">
+      <div class="section-tag">Pakker</div>
+      <h2>Enkel, transparent prising</h2>
+      <p class="section-sub" style="margin:0 auto">Månedlig betaling, ingen bindingstid. Du skalerer opp når du er klar.</p>
+    </div>
+    <div class="pricing-grid">
+
+      <!-- Basic -->
+      <div class="pricing-card reveal">
+        <div class="pricing-name">Basic</div>
+        <div class="pricing-tagline">Perfekt for små bedrifter som ønsker å svare raskere uten ekstra arbeid</div>
+        <div class="pricing-price">999 <span>kr/mnd</span></div>
+        <div class="pricing-summary">Gir deg en digital resepsjonist som håndterer kundene mens du jobber</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>Chatbot på nettsiden din</li>
+          <li>Svar på ofte stilte spørsmål (FAQ)</li>
+          <li>Tilpasset språk og tone for din bedrift</li>
+          <li>Enkelt dashbord for oppfølging av henvendelser</li>
+        </ul>
+        <a href="#contact" class="pricing-btn">Kom i gang</a>
+      </div>
+
+      <!-- Standard (Featured) -->
+      <div class="pricing-card featured reveal reveal-delay-1">
+        <div class="featured-badge">⭐ Mest populær</div>
+        <div class="pricing-name">Standard</div>
+        <div class="pricing-tagline">For bedrifter som vil automatisere hele kundereisen – ikke bare nettsiden</div>
+        <div class="pricing-price">1 999 <span>kr/mnd</span></div>
+        <div class="pricing-summary">Dere sparer flere timer daglig på manuell kommunikasjon – uten å miste personlig kontakt</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>Alt i Basic-pakken</li>
+          <li>Chatbot på e-post og sosiale medier (Instagram & Messenger)</li>
+          <li>Automatisk booking direkte i kalenderen</li>
+          <li>Oppfølging med påminnelser og bekreftelser</li>
+        </ul>
+        <a href="#contact" class="pricing-btn">Velg Standard</a>
+      </div>
+
+      <!-- Premium -->
+      <div class="pricing-card reveal reveal-delay-2">
+        <div class="pricing-name">Premium</div>
+        <div class="pricing-tagline">For etablerte bedrifter som ønsker full kontroll og maksimal effektivitet</div>
+        <div class="pricing-price">3 999 <span>kr/mnd</span></div>
+        <div class="pricing-summary">Et skreddersydd AI-system som opererer 24/7 med full overvåking. Mindre jobb + mer effektivt!</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>Alt i Standard-pakken</li>
+          <li>Menneskelig AI som svarer på telefoner</li>
+          <li>CRM-integrasjon</li>
+          <li>Skreddersydde automatiserte flows</li>
+          <li>Prioritert support og oppfølging</li>
+        </ul>
+        <a href="#contact" class="pricing-btn">Velg Premium</a>
+      </div>
+
+    </div>
+    <p style="text-align:center;margin-top:32px;font-size:0.88rem;color:var(--gray)">Alle pakker inkluderer oppsett og løpende optimalisering. Usikker på hvilken pakke? <a href="#contact" style="color:var(--blue);font-weight:600">Ta kontakt for gratis rådgivning →</a></p>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section id="testimonials">
+  <div class="container">
+    <div class="test-header reveal">
+      <div class="section-tag">Hva kundene sier</div>
+      <h2>Resultater bedriftene merker</h2>
+    </div>
+    <div class="test-grid">
+      <div class="test-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="test-quote">"Vi gikk fra å miste potensielle kunder til å booke 40% flere timer – på bare tre uker. AI-chatboten svarer selv klokken 23 og kundene elsker det."</p>
+        <div class="test-author">
+          <div class="test-avatar">MH</div>
+          <div>
+            <div class="test-name">Maria Hansen</div>
+            <div class="test-role">Daglig leder, Helsesenteret AS</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card reveal reveal-delay-1">
+        <div class="stars">★★★★★</div>
+        <p class="test-quote">"Jeg brukte 3 timer daglig på e-post og meldinger. Nå tar det 15 minutter. Simple Sund AI er den beste investeringen vi har gjort i år."</p>
+        <div class="test-author">
+          <div class="test-avatar">TN</div>
+          <div>
+            <div class="test-name">Thomas Nilsen</div>
+            <div class="test-role">Eier, Nilsen & Co Regnskap</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card reveal reveal-delay-2">
+        <div class="stars">★★★★★</div>
+        <p class="test-quote">"Fantastisk service og rask implementering. Systemet lærte vår tone og sjargong på kort tid. Anbefales på det sterkeste til alle SMB-eiere."</p>
+        <div class="test-author">
+          <div class="test-avatar">LB</div>
+          <div>
+            <div class="test-name">Lene Berg</div>
+            <div class="test-role">Grunnlegger, Berg Eiendom</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section id="faq">
+  <div class="container">
+    <div class="faq-inner">
+      <div class="faq-header reveal">
+        <div class="section-tag">Spørsmål og svar</div>
+        <h2>Vanlige spørsmål</h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item reveal">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Trenger jeg teknisk kunnskap for å bruke systemene?
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-a">Nei. Vi håndterer hele oppsettet og tekniske biten. Du trenger kun å fortelle oss om bedriften din og godkjenne løsningen. Vi er der hele veien.</div>
+        </div>
+        <div class="faq-item reveal">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Hvor lang tid tar det å komme i gang?
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-a">Typisk 5–10 virkedager fra oppstart til din AI er live. Vi starter med en gratis analyse og har systemet oppe raskt slik at du ser resultater tidlig.</div>
+        </div>
+        <div class="faq-item reveal">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Kan AI-en snakke på vegne av akkurat min bedrift?
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-a">Absolutt. Vi trener AI-en på din bedrifts tone, produkter, tjenester og verdier. Den snakker som deg – bare raskere og alltid tilgjengelig.</div>
+        </div>
+        <div class="faq-item reveal">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Hva skjer hvis AI-en ikke kan svare på noe?
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-a">Da eskalerer systemet automatisk til deg eller ditt team, og lar kunden vite at en person vil følge opp. Ingen henvendelse faller mellom to stoler.</div>
+        </div>
+        <div class="faq-item reveal">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Er det bindingstid?
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-a">Nei, ingen bindingstid. Månedlig abonnement som du kan avslutte når som helst. Vi er sikre på at du blir – fordi systemene leverer resultater.</div>
+        </div>
+        <div class="faq-item reveal">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Jobber dere bare med én bransje?
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-a">Nei, vi jobber på tvers av alle bransjer – klinikker, eiendom, handel, frisører, advokater, konsulenter og mye mer. Så lenge du har kunder å kommunisere med, kan vi hjelpe.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section id="cta">
+  <div class="cta-blob cta-blob-1"></div>
+  <div class="cta-blob cta-blob-2"></div>
+  <div class="cta-inner reveal">
+    <div class="section-tag" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.2);color:white;">Klar til å starte?</div>
+    <h2>La oss vise deg hva AI kan gjøre for din bedrift</h2>
+    <p>Bestill en gratis analyse i dag. Ingen forpliktelser – bare en konkret gjennomgang av hvor AI kan spare deg for tid og øke inntekten.</p>
+    <div class="cta-actions">
+      <a href="#contact" class="btn-white">Få gratis analyse →</a>
+      <a href="mailto:kontakt@simplesundai.no" class="btn-outline-white">📧 Send e-post</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <div class="section-tag">Kontakt oss</div>
+        <h2>La oss snakke om din bedrift</h2>
+        <p>Fyll ut skjemaet, og vi tar kontakt innen én arbeidsdag med en personlig tilbakemelding. Ingen forpliktelser.</p>
+        <div class="contact-item">
+          <div class="contact-item-icon">📧</div>
+          <div>
+            <div style="font-size:0.8rem;color:var(--gray);margin-bottom:2px">E-post</div>
+            <a href="mailto:kontakt@simplesundai.no">kontakt@simplesundai.no</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">⚡</div>
+          <div>
+            <div style="font-size:0.8rem;color:var(--gray);margin-bottom:2px">Responstid</div>
+            <div style="font-weight:600">Innen 1 arbeidsdag</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🇳🇴</div>
+          <div>
+            <div style="font-size:0.8rem;color:var(--gray);margin-bottom:2px">Lokasjon</div>
+            <div style="font-weight:600">Norge – betjener hele landet</div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <div class="contact-form" id="contactForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Fornavn *</label>
+              <input type="text" id="fname" placeholder="Ola" required />
+            </div>
+            <div class="form-group">
+              <label>Etternavn *</label>
+              <input type="text" id="lname" placeholder="Nordmann" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>E-post *</label>
+            <input type="email" id="email" placeholder="ola@bedrift.no" required />
+          </div>
+          <div class="form-group">
+            <label>Bedriftsnavn</label>
+            <input type="text" id="company" placeholder="Bedriften din AS" />
+          </div>
+          <div class="form-group">
+            <label>Hva er du mest interessert i?</label>
+            <select id="interest">
+              <option value="">Velg et alternativ...</option>
+              <option>AI-chatbot på nettsiden</option>
+              <option>Automatisk booking</option>
+              <option>Lead-generering og oppfølging</option>
+              <option>E-post og sosiale medier</option>
+              <option>AI-telefoniassistent</option>
+              <option>Full automatisering (Premium)</option>
+              <option>Usikker – ønsker rådgivning</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Fortell oss om bedriften din</label>
+            <textarea id="message" placeholder="Beskriv gjerne hvilke utfordringer du ønsker å løse..."></textarea>
+          </div>
+          <button class="form-submit" onclick="submitForm()">Send forespørsel →</button>
+          <p class="form-note">🔒 Informasjonen behandles konfidensielt og deles ikke med tredjepart.</p>
+        </div>
+        <div class="form-success" id="formSuccess">
+          <div class="success-icon">✅</div>
+          <h3>Takk for din henvendelse!</h3>
+          <p>Vi har mottatt meldingen din og tar kontakt innen én arbeidsdag. Sjekk gjerne innboksen din – vi sender en bekreftelse til <strong id="successEmail"></strong>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="9" cy="12" r="1.5" fill="white"/>
+              <circle cx="15" cy="12" r="1.5" fill="white"/>
+              <path d="M7 8.5c.5-1.5 2-2.5 3.5-2.5h3c1.5 0 3 1 3.5 2.5" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <path d="M7 15.5c.5 1.5 2 2.5 3.5 2.5h3c1.5 0 3-1 3.5-2.5" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="logo-text">Simple Sund AI<span>.</span></span>
+        </div>
+        <p class="footer-desc">Vi hjelper norske bedrifter med å vokse raskere ved hjelp av AI-automatisering, smarte chatbots og effektive systemer.</p>
+        <a href="mailto:kontakt@simplesundai.no" class="footer-email">📧 kontakt@simplesundai.no</a>
+      </div>
+      <div class="footer-col">
+        <h4>Tjenester</h4>
+        <ul>
+          <li><a href="#services">AI-chatbot</a></li>
+          <li><a href="#services">Automatisk booking</a></li>
+          <li><a href="#services">Lead-generering</a></li>
+          <li><a href="#services">AI-telefoni</a></li>
+          <li><a href="#services">CRM-integrasjon</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Selskapet</h4>
+        <ul>
+          <li><a href="#why">Hvorfor oss</a></li>
+          <li><a href="#process">Slik jobber vi</a></li>
+          <li><a href="#testimonials">Kundecaser</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Pakker</h4>
+        <ul>
+          <li><a href="#pricing">Basic – 999 kr/mnd</a></li>
+          <li><a href="#pricing">Standard – 1 999 kr/mnd</a></li>
+          <li><a href="#pricing">Premium – 3 999 kr/mnd</a></li>
+          <li><a href="#contact">Gratis analyse</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Simple Sund AI. Alle rettigheter forbeholdt.</p>
+      <p><a href="mailto:kontakt@simplesundai.no">kontakt@simplesundai.no</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Mobile menu
+  function toggleMenu() {
+    const links = document.getElementById('navLinks');
+    links.classList.toggle('open');
+  }
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
+  });
+
+  // FAQ
+  function toggleFaq(el) {
+    const answer = el.nextElementSibling;
+    const isOpen = answer.classList.contains('open');
+    document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.faq-q').forEach(q => q.classList.remove('active'));
+    if (!isOpen) {
+      answer.classList.add('open');
+      el.classList.add('active');
+    }
+  }
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Chat animation
+  const chatBubbles = document.querySelectorAll('.chat-bubble');
+  const typing = document.querySelector('.typing');
+  function animateChat() {
+    chatBubbles.forEach(b => b.style.opacity = '0');
+    typing.style.opacity = '0';
+    let delay = 600;
+    chatBubbles.forEach((b, i) => {
+      setTimeout(() => { b.style.transition = 'opacity 0.4s'; b.style.opacity = '1'; }, delay);
+      delay += 1200;
+    });
+    setTimeout(() => { typing.style.transition = 'opacity 0.4s'; typing.style.opacity = '1'; }, delay);
+    setTimeout(animateChat, delay + 2500);
+  }
+  setTimeout(animateChat, 1000);
+
+  // Form submit
+  function submitForm() {
+    const fname = document.getElementById('fname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    if (!fname || !email) { alert('Fyll ut navn og e-post for å sende skjemaet.'); return; }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) { alert('Skriv inn en gyldig e-postadresse.'); return; }
+    document.getElementById('successEmail').textContent = email;
+    document.getElementById('contactForm').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+    // In production: send to backend or use mailto
+    window.location.href = `mailto:kontakt@simplesundai.no?subject=Forespørsel fra ${fname}&body=Fra: ${fname}%0AE-post: ${email}%0ABedrift: ${document.getElementById('company').value}%0AInteresse: ${document.getElementById('interest').value}%0A%0A${document.getElementById('message').value}`;
+  }
+
+  // Number counter animation
+  function animateNumbers() {
+    document.querySelectorAll('.stat-num').forEach(el => {
+      const text = el.textContent;
+      const num = parseFloat(text);
+      if (isNaN(num)) return;
+      const suffix = text.replace(/[\d.]/g, '');
+      let start = 0;
+      const duration = 1500;
+      const step = timestamp => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(eased * num) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  }
+  const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { animateNumbers(); statsObserver.disconnect(); }
+    });
+  }, { threshold: 0.5 });
+  const heroStats = document.querySelector('.hero-stats');
+  if (heroStats) statsObserver.observe(heroStats);
+</script>
+</body>
+</html>

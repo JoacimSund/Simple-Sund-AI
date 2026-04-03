@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Sund AI — AI-automatisering for vekstklar bedrift</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #456396;
+    --blue-dark: #344d75;
+    --blue-light: #6a87b5;
+    --blue-xlight: #eef2f8;
+    --blue-pale: #f5f7fb;
+    --white: #ffffff;
+    --off-white: #f8f9fc;
+    --text: #1a1f2e;
+    --text-mid: #3d4560;
+    --text-muted: #7a84a0;
+    --border: rgba(69,99,150,0.12);
+    --border-strong: rgba(69,99,150,0.25);
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --shadow-sm: 0 2px 8px rgba(69,99,150,0.08);
+    --shadow-md: 0 8px 32px rgba(69,99,150,0.12);
+    --shadow-lg: 0 24px 64px rgba(69,99,150,0.16);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--text);
+    background: var(--white);
+    overflow-x: hidden;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 0 5%;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: var(--shadow-sm); }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    text-decoration: none;
+  }
+  .nav-logo svg { display: block; }
+  .nav-logo span { display: inline; }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-mid);
+    transition: color 0.2s;
+    letter-spacing: 0.01em;
+  }
+  .nav-links a:hover { color: var(--blue); }
+
+  .nav-cta {
+    background: var(--blue);
+    color: var(--white) !important;
+    padding: 9px 22px;
+    border-radius: 100px;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    transition: background 0.2s, transform 0.15s !important;
+  }
+  .nav-cta:hover { background: var(--blue-dark) !important; transform: translateY(-1px); }
+
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .nav-hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 100px 5% 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--off-white);
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(69,99,150,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(69,99,150,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-glow {
+    position: absolute;
+    top: -10%;
+    right: -5%;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(69,99,150,0.12) 0%, transparent 65%);
+    border-radius: 50%;
+  }
+  .hero-glow2 {
+    position: absolute;
+    bottom: -20%;
+    left: -5%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(69,99,150,0.07) 0%, transparent 65%);
+    border-radius: 50%;
+  }
+
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--blue-xlight);
+    border: 1px solid var(--border-strong);
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px;
+    background: var(--blue);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero-h1 {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -1.5px;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+  .hero-h1 .accent { color: var(--blue); }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    max-width: 480px;
+    margin-bottom: 40px;
+    font-weight: 300;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--blue);
+    color: var(--white);
+    padding: 14px 28px;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(69,99,150,0.3);
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+  }
+  .btn-primary:hover { background: var(--blue-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(69,99,150,0.35); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--blue);
+    padding: 14px 24px;
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: pointer;
+    font-family: var(--font-body);
+    background: transparent;
+    border: none;
+  }
+  .btn-secondary:hover { color: var(--blue-dark); }
+  .btn-secondary svg { transition: transform 0.2s; }
+  .btn-secondary:hover svg { transform: translateX(3px); }
+
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 52px;
+    padding-top: 36px;
+    border-top: 1px solid var(--border);
+  }
+  .hero-stat-num {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--blue);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .hero-stat-label { font-size: 13px; color: var(--text-muted); font-weight: 400; }
+
+  /* Hero visual */
+  .hero-visual {
+    position: relative;
+  }
+
+  .hero-card-main {
+    background: var(--white);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    padding: 28px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .chat-avatar {
+    width: 36px; height: 36px;
+    background: var(--blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: var(--font-display);
+  }
+  .chat-name { font-weight: 600; font-size: 14px; color: var(--text); }
+  .chat-status { font-size: 12px; color: #22c55e; font-weight: 500; }
+  .chat-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; display: inline-block; margin-right: 4px; animation: pulse 2s infinite; }
+
+  .chat-bubble {
+    border-radius: 14px;
+    padding: 11px 15px;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    max-width: 85%;
+    opacity: 0;
+    animation: fadeInUp 0.4s forwards;
+  }
+  .bubble-bot {
+    background: var(--blue-xlight);
+    color: var(--blue-dark);
+    border-bottom-left-radius: 4px;
+    animation-delay: 0.3s;
+  }
+  .bubble-user {
+    background: var(--blue);
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+    animation-delay: 0.8s;
+  }
+  .bubble-bot2 { animation-delay: 1.3s; }
+  .bubble-stat {
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    padding: 12px 15px;
+    margin-bottom: 0;
+    animation-delay: 1.8s;
+  }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .stat-val {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--blue);
+  }
+  .stat-lbl { font-size: 11px; color: var(--text-muted); }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-card-float {
+    position: absolute;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    box-shadow: var(--shadow-md);
+    z-index: 3;
+    animation: float 4s ease-in-out infinite;
+  }
+  .float-1 {
+    top: -28px;
+    right: -28px;
+    min-width: 170px;
+    animation-delay: 0s;
+  }
+  .float-2 {
+    bottom: -28px;
+    left: -28px;
+    min-width: 190px;
+    animation-delay: 2s;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .float-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .float-val {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 22px;
+    color: var(--text);
+  }
+  .float-val span { color: var(--blue); }
+  .float-icon { font-size: 18px; margin-bottom: 4px; }
+
+  /* ─── LOGOS / TRUST ─── */
+  .trust-bar {
+    padding: 36px 5%;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+  }
+  .trust-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .trust-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .trust-logos {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .trust-logo {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text-muted);
+    opacity: 0.6;
+    letter-spacing: -0.3px;
+  }
+
+  /* ─── SECTION BASE ─── */
+  section { padding: 100px 5%; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  .section-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--blue);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .section-eyebrow::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--blue);
+    border-radius: 2px;
+  }
+
+  .section-h2 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.5vw, 46px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    color: var(--text);
+    margin-bottom: 18px;
+  }
+  .section-h2 .accent { color: var(--blue); }
+
+  .section-lead {
+    font-size: 17px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 560px;
+    font-weight: 300;
+    margin-bottom: 56px;
+  }
+
+  /* ─── PROBLEMS ─── */
+  .problems { background: var(--text); }
+  .problems .section-h2 { color: var(--white); }
+  .problems .section-eyebrow { color: #7a8fc7; }
+  .problems .section-eyebrow::before { background: #7a8fc7; }
+  .problems .section-lead { color: rgba(255,255,255,0.55); }
+
+  .problems-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .problem-item {
+    background: rgba(255,255,255,0.04);
+    padding: 36px;
+    position: relative;
+    transition: background 0.3s;
+    cursor: default;
+  }
+  .problem-item:hover { background: rgba(255,255,255,0.07); }
+
+  .problem-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: rgba(69,99,150,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    color: var(--blue-light);
+    font-size: 20px;
+  }
+  .problem-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 17px;
+    color: white;
+    margin-bottom: 10px;
+  }
+  .problem-desc { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.6; font-weight: 300; }
+
+  .problem-arrow {
+    position: absolute;
+    bottom: 36px;
+    right: 36px;
+    opacity: 0.15;
+    font-size: 22px;
+  }
+
+  /* ─── SERVICES ─── */
+  .services { background: var(--off-white); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .service-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--blue);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .service-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--border-strong); }
+  .service-card:hover::after { transform: scaleX(1); }
+
+  .service-num {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--blue-light);
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+  }
+  .service-icon-wrap {
+    width: 52px; height: 52px;
+    background: var(--blue-xlight);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 22px;
+  }
+  .service-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .service-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; font-weight: 300; }
+
+  .service-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 20px;
+  }
+  .service-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--blue);
+    background: var(--blue-xlight);
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ─── HOW IT WORKS ─── */
+  .how { background: var(--white); }
+
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+  }
+  .how-steps::before {
+    content: '';
+    position: absolute;
+    top: 30px;
+    left: 12.5%;
+    right: 12.5%;
+    height: 1px;
+    background: var(--border-strong);
+    z-index: 0;
+  }
+
+  .how-step {
+    text-align: center;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .step-circle {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 2px solid var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--blue);
+    transition: background 0.3s, color 0.3s;
+  }
+  .how-step:hover .step-circle { background: var(--blue); color: white; }
+  .step-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; font-weight: 300; }
+
+  /* ─── PRICING ─── */
+  .pricing { background: var(--off-white); }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+
+  .pricing-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px;
+    transition: transform 0.25s, box-shadow 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .pricing-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+  .pricing-card.featured {
+    background: var(--blue);
+    border-color: transparent;
+    color: white;
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+  }
+  .pricing-card.featured:hover { transform: translateY(-12px); }
+
+  .pricing-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+  .pricing-badge-default { background: var(--blue-xlight); color: var(--blue); }
+  .pricing-badge-featured { background: rgba(255,255,255,0.2); color: white; }
+
+  .pricing-plan {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 16px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .pricing-price {
+    font-family: var(--font-display);
+    font-size: 46px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+    letter-spacing: -1.5px;
+  }
+  .pricing-period { font-size: 13px; opacity: 0.6; margin-bottom: 28px; }
+
+  .pricing-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+  .pricing-card.featured .pricing-divider { background: rgba(255,255,255,0.2); }
+
+  .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+  .pricing-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 300;
+  }
+  .pricing-features li::before {
+    content: '✓';
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    background: var(--blue-xlight);
+    color: var(--blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+  .pricing-card.featured .pricing-features li::before { background: rgba(255,255,255,0.2); color: white; }
+
+  .pricing-btn {
+    display: block;
+    text-align: center;
+    padding: 14px 24px;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+    font-family: var(--font-body);
+    width: 100%;
+  }
+  .pricing-btn-default {
+    background: var(--blue-xlight);
+    color: var(--blue);
+    border: 1px solid var(--border-strong);
+  }
+  .pricing-btn-default:hover { background: var(--blue); color: white; }
+  .pricing-btn-featured { background: white; color: var(--blue); }
+  .pricing-btn-featured:hover { background: var(--blue-dark); color: white; }
+
+  /* ─── TESTIMONIALS ─── */
+  .testimonials { background: var(--white); }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .testimonial-card {
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+
+  .testimonial-stars {
+    color: #f59e0b;
+    font-size: 13px;
+    margin-bottom: 14px;
+    letter-spacing: 2px;
+  }
+  .testimonial-quote {
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    font-style: italic;
+    font-weight: 300;
+    margin-bottom: 20px;
+  }
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .testimonial-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    color: white;
+    flex-shrink: 0;
+  }
+  .testimonial-name { font-weight: 600; font-size: 14px; color: var(--text); }
+  .testimonial-role { font-size: 12px; color: var(--text-muted); }
+
+  /* ─── ROI CALCULATOR ─── */
+  .roi-section { background: var(--blue-pale); }
+  .roi-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .roi-card {
+    background: white;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    padding: 40px;
+    box-shadow: var(--shadow-md);
+  }
+  .roi-label { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+  .roi-slider {
+    width: 100%;
+    margin-bottom: 24px;
+    accent-color: var(--blue);
+    height: 4px;
+  }
+  .roi-results {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .roi-result-item {
+    background: var(--blue-xlight);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+  }
+  .roi-result-num {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--blue);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .roi-result-lbl { font-size: 12px; color: var(--text-muted); }
+  input[type="range"] { cursor: pointer; }
+
+  /* ─── FAQ ─── */
+  .faq { background: var(--white); }
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .faq-q {
+    padding: 20px 24px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    background: var(--off-white);
+    transition: background 0.2s;
+    user-select: none;
+  }
+  .faq-q:hover { background: var(--blue-xlight); }
+  .faq-icon {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--blue-xlight);
+    color: var(--blue);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    font-weight: 300;
+    flex-shrink: 0;
+    transition: transform 0.3s;
+  }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+  .faq-a {
+    padding: 0 24px;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.3s;
+    font-weight: 300;
+  }
+  .faq-item.open .faq-a { max-height: 200px; padding: 16px 24px 20px; }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    background: var(--blue);
+    text-align: center;
+    padding: 100px 5%;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+  .cta-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+  .cta-h2 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 800;
+    color: white;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 18px;
+  }
+  .cta-sub { font-size: 17px; color: rgba(255,255,255,0.7); margin-bottom: 40px; font-weight: 300; line-height: 1.7; }
+  .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn-white {
+    background: white;
+    color: var(--blue);
+    padding: 15px 32px;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+  .btn-outline-white {
+    border: 1.5px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 100px;
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-outline-white:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.7); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--text);
+    color: rgba(255,255,255,0.5);
+    padding: 60px 5% 36px;
+  }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 32px;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 20px;
+    color: white;
+    margin-bottom: 12px;
+  }
+  .footer-desc { font-size: 13px; line-height: 1.7; font-weight: 300; max-width: 260px; }
+  .footer-col-title { font-weight: 700; color: white; font-size: 13px; margin-bottom: 16px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col ul a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 13px; font-weight: 300; transition: color 0.2s; }
+  .footer-col ul a:hover { color: white; }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* ─── CONTACT MODAL ─── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,31,46,0.7);
+    backdrop-filter: blur(6px);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    padding: 20px;
+  }
+  .modal-overlay.active { opacity: 1; pointer-events: all; }
+  .modal {
+    background: white;
+    border-radius: 20px;
+    padding: 44px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+    transform: scale(0.95) translateY(16px);
+    transition: transform 0.3s;
+  }
+  .modal-overlay.active .modal { transform: scale(1) translateY(0); }
+  .modal-title { font-family: var(--font-display); font-weight: 800; font-size: 26px; color: var(--text); margin-bottom: 6px; }
+  .modal-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 28px; font-weight: 300; }
+  .modal-close {
+    position: absolute;
+    top: 18px; right: 18px;
+    background: var(--off-white);
+    border: none;
+    border-radius: 50%;
+    width: 32px; height: 32px;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  .modal-close:hover { background: var(--border); }
+  .modal { position: relative; }
+  .form-group { margin-bottom: 16px; }
+  .form-label { font-size: 13px; font-weight: 600; color: var(--text-mid); margin-bottom: 6px; display: block; }
+  .form-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: var(--font-body);
+    color: var(--text);
+    background: var(--off-white);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  .form-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(69,99,150,0.12); background: white; }
+  .form-input::placeholder { color: var(--text-muted); }
+  select.form-input { cursor: pointer; }
+  .form-submit {
+    width: 100%;
+    padding: 14px;
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: background 0.2s, transform 0.15s;
+    margin-top: 8px;
+  }
+  .form-submit:hover { background: var(--blue-dark); transform: translateY(-1px); }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+    .hero-visual { display: none; }
+    .problems-grid { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+    .how-steps { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .how-steps::before { display: none; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .pricing-card.featured { transform: none; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .roi-inner { grid-template-columns: 1fr; }
+    .faq-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+  }
+  @media (max-width: 540px) {
+    .hero-stats { flex-direction: column; gap: 20px; }
+    .footer-top { grid-template-columns: 1fr; }
+    .how-steps { grid-template-columns: 1fr; }
+    .roi-results { grid-template-columns: 1fr; }
+  }
+
+  /* ─── SCROLL ANIMATIONS ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a class="nav-logo" href="#" style="display:flex;align-items:center;gap:6px;text-decoration:none;">
+    <img src="data:image/png;base64,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" style="height:36px;width:auto;" alt="SSAI hjerne-logo">
+    <span style="font-family:'Syne','Arial Black',sans-serif;font-weight:900;font-size:24px;color:#1a1f2e;letter-spacing:-0.5px;line-height:1;">SSAI</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#tjenester">Tjenester</a></li>
+    <li><a href="#prosess">Prosess</a></li>
+    <li><a href="#pakker">Pakker</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#" class="nav-cta" onclick="openModal(); return false;">Book demo</a></li>
+  </ul>
+  <div class="nav-hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-glow2"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        AI-automatisering for norske SMB-er
+      </div>
+      <h1 class="hero-h1">
+        Spar tid.<br>
+        Øk salget.<br>
+        <span class="accent">Voks raskere.</span>
+      </h1>
+      <p class="hero-sub">
+        Vi bygger skreddersydde AI-løsninger som håndterer kundedialog, bookinger og oppfølging — automatisk, 24/7. Så du kan fokusere på det som faktisk driver bedriften din fremover.
+      </p>
+      <div class="hero-actions">
+        <a href="#" class="btn-primary" onclick="openModal(); return false;">
+          Book gratis demo
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#tjenester" class="btn-secondary">
+          Se hva vi gjør
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-num">24/7</div>
+          <div class="hero-stat-label">Automatisk kundedialg</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">+40%</div>
+          <div class="hero-stat-label">Økt konvertering</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">3–5x</div>
+          <div class="hero-stat-label">Tidsbesparelse</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card-float float-1">
+        <div class="float-icon">🚀</div>
+        <div class="float-label">Automatiserte leads</div>
+        <div class="float-val"><span>+127</span> denne uken</div>
+      </div>
+      <div class="hero-card-main">
+        <div class="chat-header">
+          <div class="chat-avatar">AI</div>
+          <div>
+            <div class="chat-name">Simple Sund AI-assistent</div>
+            <div class="chat-status"><span class="chat-dot"></span>Aktiv nå</div>
+          </div>
+        </div>
+        <div class="chat-bubble bubble-bot">
+          Hei! Jeg er din nye AI-assistent. Hva kan jeg hjelpe deg med i dag? 👋
+        </div>
+        <div class="chat-bubble bubble-user">
+          Jeg vil booke en time for neste uke
+        </div>
+        <div class="chat-bubble bubble-bot bubble-bot2">
+          Perfekt! Jeg har ledig tid mandag kl. 10:00 og tirsdag kl. 14:00. Hvilken passer best?
+        </div>
+        <div class="chat-bubble bubble-stat">
+          <div class="stat-row">
+            <div>
+              <div class="stat-lbl">Henvendelser håndtert</div>
+              <div class="stat-val">1 247</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="stat-lbl">Timer spart</div>
+              <div class="stat-val">312 t</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-card-float float-2">
+        <div class="float-icon">⚡</div>
+        <div class="float-label">Svartid redusert med</div>
+        <div class="float-val"><span>98</span>%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <span class="trust-label">Bygget med</span>
+    <div class="trust-logos">
+      <span class="trust-logo">Voiceflow</span>
+      <span class="trust-logo">Make.com</span>
+      <span class="trust-logo">Airtable</span>
+      <span class="trust-logo">OpenAI</span>
+      <span class="trust-logo">Zapier</span>
+      <span class="trust-logo">HubSpot</span>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEMS -->
+<section class="problems" id="problemer">
+  <div class="section-inner">
+    <div class="section-eyebrow">Kjenner du deg igjen?</div>
+    <h2 class="section-h2" style="color:white; margin-bottom:16px;">Disse problemene koster deg<br>penger <span style="color:#7a8fc7;">hver eneste dag</span></h2>
+    <p class="section-lead">De fleste SMB-er taper leads, tid og inntekter på grunn av ineffektive manuelle prosesser. Vi løser det.</p>
+    <div class="problems-grid reveal">
+      <div class="problem-item">
+        <div class="problem-icon">⏱</div>
+        <div class="problem-title">For treg responstid</div>
+        <div class="problem-desc">Kunder forventer svar innen minutter. Svarer du etter timer — har de allerede gått til konkurrenten.</div>
+        <div class="problem-arrow">→</div>
+      </div>
+      <div class="problem-item">
+        <div class="problem-icon">📋</div>
+        <div class="problem-title">Leads faller mellom stolene</div>
+        <div class="problem-desc">Uten automatisert oppfølging glemmes varme leads. Du betaler for trafikk du aldri konverterer.</div>
+        <div class="problem-arrow">→</div>
+      </div>
+      <div class="problem-item">
+        <div class="problem-icon">🔁</div>
+        <div class="problem-title">For mye manuelt arbeid</div>
+        <div class="problem-desc">Booking, påminnelser, rapporter — oppgaver som burde skje automatisk, tar opp dyrebar tid.</div>
+        <div class="problem-arrow">→</div>
+      </div>
+      <div class="problem-item">
+        <div class="problem-icon">📉</div>
+        <div class="problem-title">Lav konverteringsrate</div>
+        <div class="problem-desc">Henvendelser som ikke følges opp raskt og strukturert, konverterer sjelden til betalende kunder.</div>
+        <div class="problem-arrow">→</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="tjenester">
+  <div class="section-inner">
+    <div class="section-eyebrow">Hva vi gjør</div>
+    <h2 class="section-h2">AI-løsninger som faktisk<br><span class="accent">skaper resultater</span></h2>
+    <p class="section-lead">Vi spesialiserer oss på skreddersydde automatiseringer som passer din bedrift — ikke generiske maler.</p>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-num">01</div>
+        <div class="service-icon-wrap">🤖</div>
+        <div class="service-title">AI-chatbot</div>
+        <div class="service-desc">Intelligente chatbots som svarer på spørsmål, booker timer og kvalifiserer leads — helt uten menneskelig innblanding.</div>
+        <div class="service-tags">
+          <span class="service-tag">Voiceflow</span>
+          <span class="service-tag">24/7</span>
+          <span class="service-tag">Flerspråklig</span>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-num">02</div>
+        <div class="service-icon-wrap">⚙️</div>
+        <div class="service-title">Prosessautomatisering</div>
+        <div class="service-desc">Koble systemer, eliminer manuelt arbeid og få data til å flyte sømløst mellom verktøyene dine.</div>
+        <div class="service-tags">
+          <span class="service-tag">Make.com</span>
+          <span class="service-tag">Airtable</span>
+          <span class="service-tag">Zapier</span>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-num">03</div>
+        <div class="service-icon-wrap">📈</div>
+        <div class="service-title">Lead-generering</div>
+        <div class="service-desc">Automatiserte systemer som fanger, kvalifiserer og følger opp leads — slik at du alltid er i dialog med de riktige kundene.</div>
+        <div class="service-tags">
+          <span class="service-tag">CRM-integrasjon</span>
+          <span class="service-tag">E-post</span>
+          <span class="service-tag">SMS</span>
+        </div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num">04</div>
+        <div class="service-icon-wrap">📞</div>
+        <div class="service-title">AI-telefoniagent</div>
+        <div class="service-desc">Naturlig AI som svarer i telefonen, booker møter og viderekobler til rett person — som en menneskelig resepsjonist.</div>
+        <div class="service-tags">
+          <span class="service-tag">Premium</span>
+          <span class="service-tag">Norsk</span>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-num">05</div>
+        <div class="service-icon-wrap">🗓</div>
+        <div class="service-title">Bookingsystemer</div>
+        <div class="service-desc">Automatisk timebooking direkte i kalenderen din, med påminnelser og bekreftelser — ingen frem og tilbake via e-post.</div>
+        <div class="service-tags">
+          <span class="service-tag">Kalendersynk</span>
+          <span class="service-tag">Påminnelser</span>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-num">06</div>
+        <div class="service-icon-wrap">🔗</div>
+        <div class="service-title">Systemintegrasjoner</div>
+        <div class="service-desc">Koble eksisterende verktøy til hverandre og bygg en sømløs digital infrastruktur som skalerer med bedriften din.</div>
+        <div class="service-tags">
+          <span class="service-tag">API</span>
+          <span class="service-tag">Webhook</span>
+          <span class="service-tag">CRM</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="prosess">
+  <div class="section-inner">
+    <div class="section-eyebrow">Slik jobber vi</div>
+    <h2 class="section-h2" style="text-align:center; max-width: 100%;">Fra problem til løsning<br><span class="accent">på 2–4 uker</span></h2>
+    <p class="section-lead" style="text-align:center; margin: 0 auto 56px;">En klar, trygg prosess uten overraskelser — fra første møte til ferdig system.</p>
+    <div class="how-steps">
+      <div class="how-step reveal">
+        <div class="step-circle">1</div>
+        <div class="step-title">Kartlegging</div>
+        <div class="step-desc">Vi forstår bedriften din, prosessene dine og identifiserer nøyaktig hva som kan automatiseres for størst effekt.</div>
+      </div>
+      <div class="how-step reveal reveal-delay-1">
+        <div class="step-circle">2</div>
+        <div class="step-title">Design</div>
+        <div class="step-desc">Vi designar løsning og flyt tilpasset deg — ingen standardmaler, alt er skreddersydd til din bedrift.</div>
+      </div>
+      <div class="how-step reveal reveal-delay-2">
+        <div class="step-circle">3</div>
+        <div class="step-title">Bygging</div>
+        <div class="step-desc">Vi bygger og tester løsningen grundig. Du ser fremgangen underveis og godkjenner alt.</div>
+      </div>
+      <div class="how-step reveal reveal-delay-3">
+        <div class="step-circle">4</div>
+        <div class="step-title">Drift & vekst</div>
+        <div class="step-desc">Vi drifter, optimaliserer og forbedrer løsningen løpende — slik at den alltid leverer maksimalt.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pakker">
+  <div class="section-inner">
+    <div class="section-eyebrow" style="display:block; text-align:center; margin-bottom:12px;">Priser</div>
+    <h2 class="section-h2" style="text-align:center; max-width:100%;">Enkle pakker.<br><span class="accent">Forutsigbar pris.</span></h2>
+    <p class="section-lead" style="text-align:center; margin: 0 auto 52px;">Månedlig betaling — ingen bindingstid, ingen skjulte kostnader. Løsningen skalerer med bedriften din.</p>
+    <div class="pricing-grid">
+
+      <div class="pricing-card reveal">
+        <div class="pricing-badge pricing-badge-default">Basis</div>
+        <div class="pricing-plan">Basis</div>
+        <div class="pricing-price">1 499</div>
+        <div class="pricing-period">kr / måned</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>AI-chatbot på nettsiden din</li>
+          <li>Svarer på ofte stilte spørsmål (FAQ)</li>
+          <li>Enkelt dashbord for oppfølging av henvendelser</li>
+          <li>Månedlig optimalisering</li>
+          <li>E-poststøtte</li>
+        </ul>
+        <button class="pricing-btn pricing-btn-default" onclick="openModal()">Kom i gang</button>
+      </div>
+
+      <div class="pricing-card featured reveal reveal-delay-1">
+        <div class="pricing-badge pricing-badge-featured">Mest populær</div>
+        <div class="pricing-plan" style="color:rgba(255,255,255,0.8);">Standard</div>
+        <div class="pricing-price" style="color:white;">2 999</div>
+        <div class="pricing-period" style="color:rgba(255,255,255,0.6);">kr / måned</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features" style="color:rgba(255,255,255,0.85);">
+          <li>Alt i Basis</li>
+          <li>Chatbot på e-post og sosiale medier</li>
+          <li>Automatisk booking direkte i kalenderen</li>
+          <li>Oppfølging med påminnelser og bekreftelser</li>
+          <li>Lead-kvalifisering og oppfølgingssystem</li>
+          <li>Prioritert support</li>
+        </ul>
+        <button class="pricing-btn pricing-btn-featured" onclick="openModal()">Velg Standard</button>
+      </div>
+
+      <div class="pricing-card reveal reveal-delay-2">
+        <div class="pricing-badge pricing-badge-default">Premium</div>
+        <div class="pricing-plan">Premium</div>
+        <div class="pricing-price">3 999</div>
+        <div class="pricing-period">kr / måned</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>Alt i Standard</li>
+          <li>Menneskelig AI-stemme som svarer i telefonen</li>
+          <li>Full CRM-integrasjon</li>
+          <li>Avanserte rapporter og innsikt</li>
+          <li>Dedikert kontaktperson</li>
+          <li>Ubegrenset antall henvendelser</li>
+        </ul>
+        <button class="pricing-btn pricing-btn-default" onclick="openModal()">Velg Premium</button>
+      </div>
+
+    </div>
+    <p style="text-align:center; font-size:13px; color:var(--text-muted); margin-top:28px;">Alle pakker inkluderer gratis oppsett. Trenger du noe spesielt? <a href="#" onclick="openModal(); return false;" style="color:var(--blue); font-weight:600;">Ta kontakt for skreddersyr løsning.</a></p>
+  </div>
+</section>
+
+<!-- ROI CALCULATOR -->
+<section class="roi-section">
+  <div class="roi-inner">
+    <div class="reveal">
+      <div class="section-eyebrow">ROI-kalkulator</div>
+      <h2 class="section-h2">Hva er det verdt<br><span class="accent">for deg?</span></h2>
+      <p class="section-lead" style="margin-bottom:0;">Se hva automatisering faktisk kan bety for din bunnlinje — juster tallene til din bedrift.</p>
+    </div>
+    <div class="roi-card reveal reveal-delay-1">
+      <div class="roi-label">Antall månedlige henvendelser: <strong id="leads-val">150</strong></div>
+      <input type="range" class="roi-slider" id="leads" min="20" max="1000" step="10" value="150" oninput="calcROI()">
+
+      <div class="roi-label">Gjennomsnittlig ordreverdi (kr): <strong id="order-val">5 000</strong></div>
+      <input type="range" class="roi-slider" id="order" min="500" max="50000" step="500" value="5000" oninput="calcROI()">
+
+      <div class="roi-label">Nåværende konverteringsrate: <strong id="conv-val">8</strong>%</div>
+      <input type="range" class="roi-slider" id="conv" min="1" max="30" step="1" value="8" oninput="calcROI()">
+
+      <div class="roi-results">
+        <div class="roi-result-item">
+          <div class="roi-result-num" id="extra-sales">+18</div>
+          <div class="roi-result-lbl">Ekstra salg / mnd</div>
+        </div>
+        <div class="roi-result-item">
+          <div class="roi-result-num" id="extra-rev">+90 000 kr</div>
+          <div class="roi-result-lbl">Ekstra omsetning / mnd</div>
+        </div>
+        <div class="roi-result-item">
+          <div class="roi-result-num" id="time-saved">45 t</div>
+          <div class="roi-result-lbl">Timer spart / mnd</div>
+        </div>
+        <div class="roi-result-item">
+          <div class="roi-result-num" id="roi-x">30x</div>
+          <div class="roi-result-lbl">Avkastning på investering</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="section-inner">
+    <div class="section-eyebrow">Hva kundene sier</div>
+    <h2 class="section-h2">Resultater som <span class="accent">taler for seg</span></h2>
+    <p class="section-lead">Bedrifter over hele Norge bruker Simple Sund AI for å vokse raskere og jobbe smartere.</p>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"Siden vi fikk AI-chatboten har vi ikke mistet én eneste booking etter stengetid. Systemet booker timer for oss mens vi sover."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">MH</div>
+          <div>
+            <div class="testimonial-name">Maria Hansen</div>
+            <div class="testimonial-role">Daglig leder, Klinikk Oslo</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-1">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"Vi sparte 30+ timer i uken på å automatisere kundeservice og oppfølging. Investeringen tjente vi inn første måneden."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">TL</div>
+          <div>
+            <div class="testimonial-name">Thomas Larsen</div>
+            <div class="testimonial-role">Gründer, Eiendomsservice AS</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-2">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"Konverteringsraten vår gikk fra 6% til 18% etter at vi fikk automatisert lead-oppfølging. Resultater vi aldri hadde trodd mulig."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">AK</div>
+          <div>
+            <div class="testimonial-name">Anette Kristiansen</div>
+            <div class="testimonial-role">CEO, Nettbutikk Nord</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-inner">
+    <div class="section-eyebrow" style="display:block; text-align:center; margin-bottom:12px;">Vanlige spørsmål</div>
+    <h2 class="section-h2" style="text-align:center; max-width:100%; margin-bottom:52px;">Har du spørsmål?<br><span class="accent">Vi har svarene.</span></h2>
+    <div class="faq-grid" id="faqGrid"></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <h2 class="cta-h2">Klar til å la AI jobbe<br>for deg?</h2>
+    <p class="cta-sub">Book en gratis 30-minutters demo. Vi viser deg konkret hva automatisering kan gjøre for nettopp din bedrift — ingen forpliktelser.</p>
+    <div class="cta-actions">
+      <a href="#" class="btn-white" onclick="openModal(); return false;">
+        Book gratis demo
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="mailto:kontakt@simplesundai.no" class="btn-outline-white">Send oss en e-post</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCADSAOADASIAAhEBAxEB/8QAHQABAAMAAwEBAQAAAAAAAAAAAAcICQQFBgIDAf/EAEYQAAEDAwIEBAMFBQYEBAcAAAECAwQABREGBwgSITETQVFhInGBFBUyQpEJI1JyoRZDYoKisSSSwdIXM1NjGFRzssLR4f/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwC5dKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKgve/ib0Nt08/aYBOo780ShUWI4A0yodw671AI/hAJz0OKrJqjjC3YubyvuhVosTJ/CGYiXlj5l3mB/Sg0PrzG4Ov8AR2gbX946tv8ADtjR/wDLQ4rLrp9ENjKlfQVn5b+KvfCK/wCI9quPNT/6b9rjBP8AobSf61FWqdRXzV+onrzqO7PTp0pzLj8hZITk+QH4Uj0AwB2FBeO88aO3ER8t26x6guKAcBwNttA/RSs1y9N8ZO11xkJaukO+WYKOC49HDqE+58Mk/oDUXbccHMXUmmIV9lbkQpDMxsONm1RvGax7OLKSff4Rivx15wValt8BcvSGp4d6cQCTElM/ZnFeyVZUkn2PKPegunpbUdh1TaWrtp27w7pBdGUvRnQsfI46g+xwRXC1lrnR2jYxkao1La7SnGQmRISla/5UfiV9Aay/s9/3G2g1TOhwJtz01dkoUxKYUMZChjJSoFJ6HIVjp0INfro3QW5W7F2elWa13O+vqXiROfcPIFH+J1Zxnr2zmgvg9xVbItv+GNUyHBnHOm2yOX+qM/0r3+hNzdA65aCtK6rtlyWRksJd5H0/NpeFj6iqUxODDdZ6F47t00rGdIyGFzHivPoSlop/qai3cPajcra6SibfrLMgNIWA1cYrnOyFeWHEfhPzwaDValUh4ZOKm4QpsPSW5swy4DmGo15cI8Rg/lDx/Mny5+4889xd1CkrQlaFBSVDIIOQR60H9pSlApSlApSlApSlApSlApSlAoSAMnoK6PXmrLFojS0zUuo5qYlviJytR6qUo9EoSPzKJ6AVntvzxJ603GkyLba5D9g02VFKIcdzDr6PIvLHU5H5R8PzxmgvPrPeXa7R6lt3/WtqYeR+JhlZkOj/ACNhSh+lVv4mOKq2XPTKdPbV3KX4swETbkWFsqab7cjfOArmV5qx0HbqekI7e8Ou7GuIjVxg6fVAgvgLblXNzwEuJPZQB+JQPfIHWpTsPBJq9dwjffurrExD5wZH2NLrrgT5hIUlIJ8up/XtQRdw+7Eap3enOTGnfuywsOcsm5vI5uZXmltORzq9euB5nsKuvofho2i0vCbaVppF5kpA55VzUXlLPry9ED5AVJ2ktP2rSum4GnrJEbi2+CyllltAA6Adz6qJ6k9ySTXa0HgrjsxtTcI5Yk6A0/yEY/dw0tn9U4NVp4jOEuLbbTL1TtkqQURkF2TZ3llw8o6ksq7nA68qsnvg9hV06UGdXBpvNK0BrVjS96mrOmLu8GlJWcpiPqICXR/CCcBXljr5VoqOoyKzE4vNJxtG79XyJbmUx4kxSbgw2gcqUeKOZQSPIBfNgDtV/eHjU69Y7J6V1A6srffgJafUfN1olpZ+qkE0HI3I2o0BuJIiydXaeYuEiKOVp4LU24E5zylSCCU58j06mvT6fs1q0/aI9oslvj2+BGTyMsMICEJHyHn6nzrn0oFce5wYVzt79vuMRmXEkILbzDyAtDiT3BB6EV8tXK3Oy1RGp8VclPdpLySsf5c5rlUGd3GJsSjbW8N6m0y06dL3F3k8M/F9heIz4ef4DglJPoR6ExKzq3cW8QY1ojag1LMixGkssxWJLykNoSMBISk4wB0rWG7W23Xe3u266wIs+G8OV2PJZS62sehSoEH61x7DYLFYIiYlistttcdP4WocVDKB9EgCgyojal3J0rIQ+1e9UWhwHKeaQ80D9CcGp02W4vtU2OU1btwm/v8AtaiE/bG0BEtgepxgOD2OD7+VXpu1qtd2iLiXW2w58dxPKtqSwl1Ch6EKBBFU44quF+BarNK1rttEW01GCnbhaQoqSlsdS4znr080enbtiguBpbUFm1RYYl9sFwZn26WgLZeaVkEeh8wR2IPUHoa7OsyOHffzUOz6psRmCi9WaYQtUB58tBtwfnQrCuUkdCMYPT0q3W2fFftjq1xmHdH5GmJ7mE8lwx4BUfIPDpj3UE0E+0r+IWlxCVoUFJUMpUDkEetf2gUpSgUpSgUpXW6quzVh0xdb48nmat0J6WseqW0FZ/2oKCcdO57+rtyV6QgPEWXTyy0QlXR+Vj41n+XPIPko+dS3wZcP1pg6dhbh6ztyZl0nID1thyEAtxmj1S4UnutQ6jPYEeZ6VN2vtLuvt5LHbLgovrvF3QqWo/nCl87hP05q1iabQ00hptIShCQlKR2AHYUH1SlKBVIeJTiR3F0xvZOsOlp8aBarK6hpbBjIc+1qwFL8RSgSB1IwkpwPfrV3qzQ417HIsvERf1vNlLVxS1NYUR0WlaACR8lJWPpQaOaTua73pa03lxnwFz4LMpTWc8hcQFcv0ziuzqM+GDV0XWWx+mbgw4kvxITcCWnPVLzKQg5+eAr5KqTKDPb9oc625vrFQjHM3ZGEr+fiOn/YirOcDrDzHDXpwvAgOuy3EA/wmS4P+hP1rsN6uHzQ+61+i32+PXSDcGGgyt2C6hPjNgkgKCkqHTJ6jB6/KpJ0lYLZpbTVv07ZmPAt9vYSwwjOSEjzJ8ye5PmTQdpVD+NXfO+3DW07b/S11egWe1rLE9yMvkXKfGOdJUOoSg5TgYyQrOemL4VlLxEWC4ab3t1dbrk2pLi7q/JbUf7xp1ZcQoeuUqH1yPKg6STpHWlpsUbVj+n7zCtjigpi4mOtDeSehC8dOvY1b7gZ3vvWppr23erZjk+W0wp+2zXlczi0JxzNLP5sDqD3xkHyrg7o8UW3uotiZ+nLda5v3xcbaIZhLjhLMZRSATz5wUp7jAz0Haop4DLNNuW/8KfHQsx7ZEffkrA6JCkFCQfmVD9KDRskAZPQVwbTebRd/F+6rpBn+Crld+zPpc5D6HlJwa6HeOzXfUO1mpLJYXyxc5tvdajKCuXKiPw58s9vrWbWxm4162e3MauxjveChZi3aA4ChS2ubC0kHstJGRnsR186DVGvlxCHG1NuJC0KBCkkZBB7g11ej9R2bVum4WobBOanW6Y2HGnW1Z+aT6KByCD1BBBrtqCv2tuEbajUMmRMt7d00/JeJXiDICmQo9c8jgVgeySkemKrXvdwr600FCdvVjeGprM0Cp5TDfLIYSPzLbycp90k48wB1rRWlBnJwxcRF622ucexahkSLlpJ1QQWlHmXByfxtE9eUeaO3pg99E7ZOiXK3R7jAkNyYklpLrLzZylaFDIUD6EGqN8dGykPTExO4ul4qI9snPeHcoraMIYfUchxIHQJX2I8j/N09j+zx3JduFruG210lKW5AQZlr51Z/clWHGx/KpQUB/iPpQW7pSlApSuPc5sa222VcZroajRWVvPLPZKEgqUfoAaDxO9+6+mtp9Lm731xT0p7KYMBojxZKxjoM9kjIyo9h6nANAd3eIHcfcqQ9Efublrs7wLabXbyUNrSrphwj4nCR069PQCul3b1nfd4t2Hrolp95ydITEtULOS00VYbbA9TnJ9yavPw3cPunNsbRFud0jR7pqxaed6atHMmMT+RkHtjsVdz17A4oK4cHOzuvkbwWPV1207NtNmtvivrfmtFouEtqQlKEnqTlQPbGAfbN/qUoFKVwb5eLRYreu4Xu6QbZDR0VImSEstp+alEAUHOqvvGrtBK3F0WxftPxw9qCxpUpDKR8Ulg9Vtj1UMcwHzHc1PVunQrlCanW6XHmRXk8zTzDgWhY9QodCK5FBl3w/bzaj2d1G+uMyqdaZKgmfbHVlAUR05knB5FjqM49iO2JW344urzf2WrVtmZlhhLZSZU15tAlKWR1QjqoIAzjmHUkdCB3nnfXhm0XuTIkXqAtWntQukrXLjthTUhXmXW+mSf4gQeuTms/IcKJp3cJm36njqdiW65hq4NAHKkIcw4Me4BoPQ2Xerdiz3Nu4xNe35TqVc3LIlKfbX/ADIXlKh8xV9eFnedvd7SUhc6M1Dv9sUlE5lo/AsKzyuoB6gHBGPIiop4wdebO37YeNbdO3Ww3K4c7JszEAoLkJAKSrKE9WU8gKeVQT1wMdK8L+zejXBW6eoZjYX93t2Qtvn8viKfbLY+eEuf1oL5VEvEDsTpfd2IzImOOWy+RUFEe4sp5jy/wOJ7LTnr5EeR6nMtVx7nNi222yrjNdSzFisreecV2QhIKlE/IA0GRV6sIteuZmmXJPjCLcVwlPpRjm5XCgqAz07ZxmtQNktrdMbV6VFo0+0tx58hyZNewXpC8dCSOwHkkdB8yTWamlEv6w3ktpSgl2731DhT3P7x/mP+5rWdI5UgDyGKD+1VDjC4c39TyJOv9CRee8Ec1xtyMD7Vj+9b/wDcx3H5sdOve19KDLfZXeLWuzt9ebt5U7AU4UzrRLBDalDoTju2sdsj6g1cjQfFttTqCG398y5mm5x6LYmMKW3nHUpcQCCP5uU+1ew3d2H273NccmXy1riXVaQPvKAoNPnAwOboUrwBj4gelVl1VwT6uiurVpvVdpuTOfgTLaXHXj3xzD+tBP8Aqfik2ZskVbrepHbs8E5Sxb4q3Fr9gpQSgH5qFe32g3N0tulppV90u++W2nPCkR5LfI8wvGeVQBI7dQQSD61TO1cGG5siSEXC7adhM+biX3HSPoECrY8Oez9v2e0lJtUe5O3SdOeD82Upvw0qUBhKUJycJA9SSSSenQAPUbr6aiaw221BpuY2lbc6A62gkZ5HOUlCx7pUEn6VmRsdrY7absWjVMmPIdZgvKRLZZIC1NqSULAzgE4PY+lauPKQhpa3MciUkqz6Vj/qBtU7V1yRAaW8XpzvgobSVFWVnAAHeg1o0Tqmxaz01F1Fpye3Ot0pOW3E9CD5pUO6VDzBruqze4Nd2ntvNxGbLcpC/wCzl8dSxJQVfCw8cJQ8B5dcBXt8hWkI6jIoFR9xISXYmxGtH2SQsWl5PT0Iwf6E1INee3LsKtUbe6g063jxbhb3o7eT051IITn64oM9eB+FHmcSOnjISlYjtSnm0qHTnDC8H6Zz9K0rrKXYnU7m329Wnr9MQtlMGf4M1CxgobWC07keoSpXT1FasNOIdaQ60sLbWkKSoHIIPYig+qUpQKqb+0mhzndFaUntOOfYmJ7zb6AfhK1oSUKPy5FgfzVbKvDb76Bj7lbX3fSrqg3Ieb8WE6f7uQj4mz8iRyn2UaCBf2cOqW5WkdQaQekkvwZSZjDSlf3Tg5VFI9ApIz/MPWrZ1lHtlq3UGzm67N3EVxubbX1xrhCcJQXW84caP6ZB9QDWmm2evNNbh6Yj3/TVwbksOoBda5h4sdXmhxPdJHX5+WRQeoqr3FBwv/26vMjWOhpEWFfJBCpsKQooZlKAxzpUM8izgZBGFdyQck2hpQZyWfhH3jm3JEWXbrZbWCrC5L89CkJHrhHMo/QVdjYXaix7SaP+5LW6uZLkLDs6a4nlU+5jAwPypHkOvn3zUh0oFV446tyYmk9rHtKRZI++dRJLAaSfiRF/vVn0B/APXmPoa9fvtvvo3au2uNyZTdzvyhiPa47gLmfJTh/u0/PqfIGs+rtcNcb37ppcWly5327PhthlHRtlGeiR5IbQPM+QJJzk0Eq8AWg1ai3ZXquU0TA060XEEjoqS4ClsfQFavmlNaEV4XYvbi27XbdwdMwQhyQB40+SkYMh9QHMr5dAB6ACvdUClK+Xefwl+H+PlPL8/KgqTxTcUVz0vqWVovbtcUTIRLU+5uNh3wnvNttJyklPYlQPXpjoagCzcTO9Vtuf246zdmhS+ZyPKisraX7Y5Ryj+UivBSTE/wDE5w6p8f7J98n705c+J4fjfvcefNjm+tW/4tkbHo2DKtOt6ZFzWpj7kVaw34x+NPNnk68vh82ebzx54oJe4ad5IG7+kHZhjtwb3b1JbuMNK8pSVZ5XEZ68isHv2II69zK9ZGbe671Zt/eF3fSN5etktxvw3FISlSXEZzyqSoEEZAPUV7+dxPb3zIrkZzWim0rGCpmBHbWPkpLYI+hoLn8W+6cTbjbCYxGkt/2gvDK4tvZ5vjSFDC3sd8JB6H+LAqmHBvpKVqvfqxrbZUuJaVm4y14+FCUfhz7lZSB//K8npfS+4m7+riLfGud/uUheH5shZUhserjquiQB5Z9gOwrRDhx2gtm0WjTbmnkzbxNIduU0JwHFjshI7hCcnGepyT54AUQ4sNEI0BvheLfDZ+zwJpTcYISMBLbpJIT6BKwtI/lq/fDbrBeudldN359XNMMURpZ8y80fDUo/zcvN/mqu/wC0rtLWdG31KAHf+JiLV5qT8C0j6Hn/AFNex/Z0XBcnZ67QVKymHeFhI9AttCqCzdKVxL3KMGzTpyRkx47joH8qSf8ApQZY8QMq33ffTVr1kjJRHeu7qG0t9QtYVyqUP5lAn61pptXaZlh200zZbhIXImQbVGYfcUclS0tpB/qMVl1tFFF63h0nDlkuibfYiHSrrzc76c5/U1rVQKUquPFxxCo25jr0lpJ1t3VUhrLr5SFJt6FDoog9C4c5AOQO5HYEJH3h3p0HtaylGo7kp24uI52rdEAckLT5EpyAkEjGVEZ8uxqNNiuKmHuVuWzo2VpNdn+3JcMF9M3xuYoQVlKxyJxlKVHIJ69Peqd7a7d693m1c8LW2/OecdC7hdJiyW2c/mcWckn0SMk+Qq8/D/w36U2qnt39cyRetRhotiW6AhpjmBCvCQOxIJBKiTjtjJyHUcVPDpF3NCtT6YWzB1W2gJcC/hanIAwAs/lWBgBXoMHyIpATuLs9rRSAu76VvkfGQCW/ETnp/hcbOPdJxWstdPqrS+nNV2/7v1JZIF2i+TcphLgHyz27DtQUj0Xxp63tjaWdT6ctd/QlJHiMuKiOk+RJAWn/AE1JUHjb0QuIlU7R+omJOPibZWy6gH2UVJJ/5a9Bqvg82nu0hyRal3uwKUnCWYssOsg/xYdClfTmAryX/wAD+nebP9vbrjPb7C3/AN1B0epOOGYtDjenNAMMq5v3b8+eXAR7toQnB/zmol13xQ7u6pZdjIvqLHFcyC3am/BVg46eJkrHzCgasjA4KttG2QJ2oNUyHQeqm32G0n6FpX+9SLpDh12d0w42/C0ZFlSkADx57rklRIOeblWooB/lSKCgW1W0W4O6lxKrDan1xC5h+6S8ojoPQnLh/ErBB5U5PUVoBw/7I6X2jtCvsIFxvklsJmXR1sBavMobHXkRnrgHrgZJwMSYkQrZb8JEeFDjo7DDbbSB+gAFdKNd6HJx/bLTufT7zZ/7qD0VK4N1u9qtNndvFyuMWJbmUeI5KedCW0pPY8x6dcj9aiZ/ii2PZnKiq1mVFJKS4i3SlN5Bx+IN9fmMj3oPB654xbJpncifppGjpk+2W+SqNInomJQ6VJOFlDRRggEEDKxn2qc9rty9G7lWhVx0neGpfhYEiMr4H2Ce3O2eoBwcHscHB6GoN3P4ddvd5G5WvNuNSx4lwnlTjjjLnjQpD3clQHxNqOeuPny5JzUWQxuFsfuSlKzKsN+gqC0qSrLb7ee/8LjasH2PUHrQWg4quF+56k1JK1tt23GXKmku3G2LWGy475utE/DlXUqBI69RnJxAVq4ad6Z9xTDVot+ICvlU9JkNJbR7khRyPkDV7+Hfdm2bt6GReI7aYl0ikM3KGFZ8FzHRSfVCsEj6jyqSqCE9ieHjSOhNDKtWpLVZ9TXSatL896ZCQ80FpBCUNhwHCU8yuuATknA7D16Nl9pUTPtSduNL+J6G2tFH/IRy/wBK97Sg4tqttutMFuDaoEWBEaSEtsRmUtNoA7AJSAAK5VKUFRP2lUltOmtHwyR4i5khwD2CEg//AHCuz/ZusLRtlqR9Q+Fy8AJ+jKP/AN1E/wC0O1U3eN2rfpyM4FtWKAEu4PZ9486h/wAgb+uasVwK2F2y8Plskvtlty6SX5oBGDyFXIk/UIyPYignavwuUVE23SYThwiQytpR9lAj/rX70oMktAvu6U3csMicktO2i+MKfSfyqafTzD/Sa1sQpK0BaSClQyCPMVm3xqbfTdF7yT7siOoWm/uKnRXkj4fEJy6g+igok/JQNWm4O964W4Ojoumb1Mab1VamQ0ttasKmMoACXU57qwPiA8+vY0Ejb7bgRNtNsrrqmQUKkNo8GCyr++kL6IT8u6j7JNZxbY6Q1LvXuym3KmuOTLi8uXcp7oK/Cbzlxw+p64A6dSB0qev2kWqlvai03oxl393GjKuMhIPTnWooRn3AQr/mqQv2e2io9n2ul6wdYH2++yShDhHUR2iUpSPQFfOT64HoKCe9vtHWDQmlYum9NQURIMYdgBzurP4nFn8yjjqT7DsBXf0pQKUpQKUpQKiTiS3ts+0OnkEtIn6gnIV93wSfh6dPEcx1CAce6uw8yJbqrvFhw56r3Q17D1Rpe7Wtv/g0RZDFwdcQG+VRIUgpQrIPMcjp2889AqLrbXm5O7l9bau0+63x9bmY1tioUppCj0/dso6Z64zgk+tdo7w+7zNWT73Vt9djG5OfkTyKfx/9EK8TPty5rQHYfaHTe1GlWrdbWGZN1dSFT7mpvDshfmATkpQPJIOPPuSTI9Bj5cJmooEB3StwlXSLDYk+M7a33HENtvgcvMWj0C8dM4zipe07wvbjXza5rXUNVuCJET7ZGtynFCQ8zy8ySOnLlSeoBPXI9a9Bx96AuFh3WXrVppblpv6GyXQPhakIQEKbJ90oCh65V6V1emuKrXlh2rY0PFgW5bkWF9hi3NfN4rTQTyo+HPKVJTgAn0GQfMOHwW7hXXR28VtsqJCzZ788IkyMT8POQQ24B5KCsdfMEj5XQ4nNqIO6u3kiGEIbvtvQt+1SeXJS5gEtn/CvlCT6HB64xVKeDPQd01hvTarm1HX912N4TZsgj4UlOShGfNSlY6egJ8q0roMxeFXXUvbje23GW8uNAnvC23NtZwkJUoAKUPVC8HPkM+prTqsv+LjT0fTHELqmFCTyR35CJzYHTBfbS6oD0AWpWParwWvfrbazbf2C4an1lbmrg/a470iO0svvBwoTzAoRkg5z0PWgmClVyunGTtHDlqZjxdT3FA7PRoLYQr5eI4lX6iv2svGJtBcHy3K/tDaUgZDkuAlST7fulrP9KCw9eR3e19Z9tdCT9U3haSlhPLHj84SqS8fwNp9ye/oAT5VGOpuLbZ+12p2TbrlPvUoJ/dRY0NaCs+WVOBKUjPc5JHkD2qlm8m6Gr96NZsPTWllvn8G2WqKCtLXMcAAd1rPTJ7n2HSg6/Tdt1HvJvC1GWVSbrf55dlOJHwtpJ5nF+yUpB+gArVKwWyJZLFAs0BsNRIEZuMwgDolCEhKR+gFQdwf7HDbLTy7/AKgaSrVN0aAdQcEQ2u4aB/iPQqPsB5dZ+oFKUoPGbx7c2Hc/RUnTd9bKeb95Fko/8yM8B8K0/wDUeYyKzf3M2717svrNsTkyYbjLviW+7Q1KDbuOykLH4VeqT1Hy6nVOuFe7Rar5bXbberbDuUJ4YcjymUutq+aVAigyS15rDUGuL+b9qeeZ1xUy2yp4oCSUoTyp6AAZx3PmcmtOuG+A3bdhNDx2khKV2SNIOPV1AcP9Vms/OK7Rtp0JvhebDYYP2G0hth+IzzqUEpW0kqwVEnHPz+daAcNNwRc9gdESW1BQRZmI5+bSfCP9UGg8vvrxG6V2o1RG05Ptdwuk5xhMh5MVSUhhCiQnJUepOCcemPWpT0XqS06v0tbtS2N8v2+4MJeZURhQB7pUPJQOQR6g1Wjj12fmait7W5Gnoxfm22P4N0YQPiXHTkpdA8yjJz58p/w1CXCtxBTNrJhsF/S/O0nKdK1Ibwp2E4e7jYPdJwOZOfcdcgho5Sug0PrLS+t7OLrpW9w7rF6BZYcBU2f4Vp7oPsQK7+gV43eDcjTm1+kHdRaifVy83hxozfV2S6eyED5ZJJ6ACvU3W42+1QHbhdJ0WDDZHM7IkupbbQPVSlEAfWs/eO7cWx6411Zoel75Hu1qtsJXO5HUS2JC3Fc2D2V8KUdRkdaDtL5xq7hv3RTlm05puFBCstsyG3n3CPRSw4kH6JFTlw38TVo3Nubemb/AasmoloJYDayqPLIGVBBPVKu5CST0Hcmo34TNhdsNdbPf2j1LFdulylPvMrUmWtoQ+U4AAQQObBCviz3HTFVedUrR+66zpuYqUbPeSIL6D1d8N3CD075wPnmg1upSlB1+o7HaNR2aRZr7bo1xt8lPK7HkICkK65HQ+YPUHuDULv8ACVsw7cvtYtFzbb6kxkXFwNH/APIfRVTxSg6XRek9OaMsjdl0xaItrgoJV4bCMcyj3Uo91H3OTXdUro9e6ntejNHXPU95kIYh29hTqio45ldkoHqpSiEgeZIoM6eNS7R7vxHalVFWFtxPAiFQ/jbZQFj6K5h9K4e2nDtupryMidbrB93W5YyiZc1/Z0LHQgpSQVqBB7hOPevM6Wtlw3T3jiwVlZlahu5ckLHUoDjhW4v6AqP0rWGMy1Hjtx2EBDTSAhCR2SkDAFBSC28EOo1jNx1xa2OnZmK45g/UivzunBHqlsKNt1paJGB8KXo7jZJ+nNirzUoKD2fgr3Cfkct01Dp+EyD+NpbjxI+XKn/erLbF8PGiNrFIuTKXLzf+XBuUtAHh+oaQOjY98lXv5VMVKBSlKBSlKBSlKCjf7SPTpY1lpnVLbeETIK4TqgPzNLK0/XDh/SpW/Z9amau+yz1iU6DJsk9bakZ6htz40H5ElY/ymvYcXO3i9w9m7hEhNFd2thE+AAOq1IB50f5kFQHvy1SLhU3SG1e57cy5KdTZLgn7Jc0pGeROfhcx5lCuvrgqoNOlAKSUqAIIwQfOqpcQXCRB1FNk6i24ejWqe7lb1re+CM6rzLZA/dk+n4c/w1aiBLjT4TM2FIbkRn0Bxp1tXMlaSMggjuCK/agydvmidzdu7op2fY7/AGKSzn/iWUrSkDzIdb+Ej3BxXyjdfcxMb7MnXeog1jHL9vc/3zmtY1JSoYUAR6EVxxb4AXziFG5/4vCTn/agyhasu5eu5LSk27VGoXSP3a1tvP8AT2JyKk7T3CRu1c9OTLrMhwLVIbaK41vkSUl+QRg8vw5SjIz+JQORggd60YSlKRhKQB6AV/aDJlVj3N0m/Ls6bbqm0Lf/AHcmO0282HemMKCeiuhPr3qbeE3h21LedYW/WOsbW/arHbXkSWWJTZQ7McT8SQEHqEA4JJ79hnri/BAPcA1DPEFxC6U2pQu2JR986kU3zN29lwBLWR0U8rryjzx3Pt3oJnoegyazN1txNbwanfd5NTOWSOs/CxakeByjPYL6r/1V4Mp3E1lMW8U6p1FKPVa8Pyln5nqaDWGVd7TFSVSrpCYA7lyQlP8Aua6i56+0NbGS9P1hYY7Y7lc9r/urMBna3dSSoIb281ivPrZ5GP1KMV31u4ed6LgEqZ0BdEBX/wAwptnHzC1A0F19fcUm0el47giXxWoZqeiY1rbKwTjuXThAHyJPtVM+IPffVG709qI82LZYY6+aNbGVc3MvyW4rutfXA8h5DJJPsdLcHO6NzeR98SbPZGCRzKcfLywPPCUDBPtkfOrLbM8MWgNvZMa6zEL1JfGCFolzWwGmljsptrqEkHqCSojyNB4jgb2Ql6Wiq3D1ZCXHu8xkt22K6MKjsq/E4oeS1jGPMJz/ABVaqlKBSlKBSlKBSlKBSlKBSlKBVIOMbh2mwrnM3C0JAMiBIUXbnbo6MrjrPVTqEjug9SQOx69j0u/SgzW4fuI3Ve1qE2iS2b5p0qyITzhC4/qWl9eUf4SCPl1q5ugeI7aXV8ZpTOpmbTLWBzRLoPs60H05ieQ/MKNdBvNwt6B145IulpCtM3t0lZfiIBYdUe5ca6Dr6pKT5nNVg1nwk7uWJS12yBB1DHT+eFJSlePXkcKT9Bmg0Qtlyt10j/aLbPizWf8A1I7yXE/qkkVyqyVm7c7kWh5QlaI1RDWg4KlWx9I+h5cEe4rokT73ars28Jc+FcIboUhRWpDrK0n9QQaDYeldTox2c/o+yv3RXPPct7C5KsYy6W0lZ/XNdhOlR4MJ+bLdSzHjtqddcUcBCUjJJ+QFBDnFhvK3tTotLNsWy5qa6BTcBpXXwU9lPqHoPLPc/I1RbaLbrV29OvnIsV11wuOePdLpIypLKVHqpR/Mo9cJ8z7AkfG8+s7lu5vBNvEdp50TZKYlqjYypLPNytIx6nOSB5qNaJ8P22lu2t25g2CMhKp7iQ/cpHm9II+Lr/CPwgeg9c0HA2q2H242+tbbEGwxblcMfvrhPaS884r2zkIHskD6nrUntNttICGkJQgdAlIwBX1SgUpSgUpSgUpSgUpSgUpSgUpSgUpSgUpSgUpSgUpSgVk3qp7+1W9lydT+8Tc9QOBHnlK3yB/QitTtZ3QWPR96vRIAt8B+Vk/+22pX/SsuuHq3KvO+ejYRBX4l4YcXnzShXOr+iTQarxmwzGaZHZCAn9BioR43tZnSWxNwix1lM2+uptrJSeqUqypxXy5EqT81CpyqlH7Sq7KVeNIWIK+BuO/LUn3UpKAf9JoPE8AejG9R7xOX+UwHYunY32gcwykPryhv6j41D3TnyrQ2q1fs77C1b9mZ168MCRdro4VLx1LbSUoSPorxD/mNWVoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoOHfbXDvdknWa4teLCnx3I0hGccza0lKhny6E1BmzXC7pbbfcJOsGr5Pur0bxPu9h9pKEx+dJSSog/GeVRAOB3zip/pQKppx/7d611HrSwag07p25XmEm3/Y3BAjrfW04HVq+JKASAQsde3Srl0oIt4VNKXjRmx1isl+iGHcUhx55hX4m+dZUEq98EZqUqUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoP/2Q==" style="height:34px;width:auto;filter:brightness(0) invert(1);" alt="SSAI hjerne-logo">
+            <span style="font-family:'Syne','Arial Black',sans-serif;font-weight:900;font-size:22px;color:white;letter-spacing:-0.5px;line-height:1;">SSAI</span>
+          </div>
+        </div>
+        <p class="footer-desc">Vi hjelper norske SMB-er med å vokse raskere gjennom skreddersydde AI-løsninger og automatisering.</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Tjenester</div>
+        <ul>
+          <li><a href="#">AI-chatbot</a></li>
+          <li><a href="#">Automatisering</a></li>
+          <li><a href="#">Lead-generering</a></li>
+          <li><a href="#">CRM-integrasjon</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Selskapet</div>
+        <ul>
+          <li><a href="#">Om oss</a></li>
+          <li><a href="#">Pakker</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#" onclick="openModal(); return false;">Kontakt</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Kontakt</div>
+        <ul>
+          <li><a href="mailto:kontakt@simplesundai.no">kontakt@simplesundai.no</a></li>
+          <li><a href="#">simplesundai.no</a></li>
+          <li><a href="#">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Simple Sund AI. Alle rettigheter forbeholdt.</span>
+      <span>Org.nr: XXX XXX XXX</span>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-title">Book gratis demo</div>
+    <p class="modal-sub">Fyll ut skjemaet, så tar vi kontakt innen én arbeidsdag.</p>
+    <div class="form-group">
+      <label class="form-label">Navn</label>
+      <input type="text" class="form-input" placeholder="Ditt fulle navn">
+    </div>
+    <div class="form-group">
+      <label class="form-label">E-post</label>
+      <input type="email" class="form-input" placeholder="din@bedrift.no">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Bedrift</label>
+      <input type="text" class="form-input" placeholder="Bedriftens navn">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Jeg er interessert i</label>
+      <select class="form-input">
+        <option>Basis — 1 499 kr/mnd</option>
+        <option selected>Standard — 2 999 kr/mnd</option>
+        <option>Premium — 3 999 kr/mnd</option>
+        <option>Skreddersydd løsning</option>
+      </select>
+    </div>
+    <button class="form-submit" onclick="submitForm()">Send forespørsel →</button>
+  </div>
+</div>
+
+<script>
+// NAV SCROLL
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 30);
+});
+
+// MOBILE MENU
+function toggleMenu() {
+  const links = document.querySelector('.nav-links');
+  links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
+  links.style.flexDirection = 'column';
+  links.style.position = 'absolute';
+  links.style.top = '68px';
+  links.style.left = '0';
+  links.style.right = '0';
+  links.style.background = 'white';
+  links.style.padding = '20px 5%';
+  links.style.borderBottom = '1px solid #eef2f8';
+  links.style.boxShadow = '0 8px 24px rgba(69,99,150,0.1)';
+}
+
+// MODAL
+function openModal() {
+  document.getElementById('modalOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+function submitForm() {
+  const name = document.querySelector('.form-input[placeholder="Ditt fulle navn"]').value || '';
+  const email = document.querySelector('.form-input[placeholder="din@bedrift.no"]').value || '';
+  const company = document.querySelector('.form-input[placeholder="Bedriftens navn"]').value || '';
+  const pkg = document.querySelector('select.form-input').value;
+  const body = encodeURIComponent(`Navn: ${name}\nE-post: ${email}\nBedrift: ${company}\nInteressert i: ${pkg}`);
+  window.location.href = `mailto:kontakt@simplesundai.no?subject=Demoforespørsel fra ${encodeURIComponent(company || name)}&body=${body}`;
+  const btn = document.querySelector('.form-submit');
+  btn.textContent = '✓ Sendt! Vi tar kontakt snart.';
+  btn.style.background = '#22c55e';
+  setTimeout(closeModal, 2000);
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ROI CALCULATOR
+function calcROI() {
+  const leads = +document.getElementById('leads').value;
+  const order = +document.getElementById('order').value;
+  const conv = +document.getElementById('conv').value;
+
+  document.getElementById('leads-val').textContent = leads.toLocaleString('nb-NO');
+  document.getElementById('order-val').textContent = order.toLocaleString('nb-NO');
+  document.getElementById('conv-val').textContent = conv;
+
+  const currentSales = Math.round(leads * conv / 100);
+  const newConv = Math.min(conv * 2.2, 50);
+  const newSales = Math.round(leads * newConv / 100);
+  const extraSales = newSales - currentSales;
+  const extraRev = extraSales * order;
+  const timeSaved = Math.round(leads * 0.3);
+  const cost = 2999;
+  const roiX = Math.round(extraRev / cost);
+
+  document.getElementById('extra-sales').textContent = '+' + extraSales;
+  document.getElementById('extra-rev').textContent = '+' + extraRev.toLocaleString('nb-NO') + ' kr';
+  document.getElementById('time-saved').textContent = timeSaved + ' t';
+  document.getElementById('roi-x').textContent = roiX + 'x';
+}
+calcROI();
+
+// FAQ DATA
+const faqs = [
+  { q: 'Hvordan lang tid tar det å sette opp en løsning?', a: 'De fleste løsninger er operative innen 2–4 uker fra første møte. Vi håndterer all teknisk implementering — du trenger ikke gjøre noe teknisk selv.' },
+  { q: 'Fungerer det for min bransje?', a: 'Ja — vi jobber på tvers av alle bransjer. Så lenge bedriften din har kundekommunikasjon, bookinger eller repetitive prosesser, kan vi automatisere det.' },
+  { q: 'Hva skjer hvis noe går galt?', a: 'Vi monitorer alle løsninger kontinuerlig og har responstid på under 4 timer på kritiske feil. Du er aldri alene — vi er alltid tilgjengelig.' },
+  { q: 'Kan jeg bytte pakke underveis?', a: 'Absolutt. Du kan oppgradere eller nedjustere pakken din når som helst. Ingen bindingstid og ingen straffeavgifter.' },
+  { q: 'Trenger jeg teknisk kunnskap?', a: 'Nei, ingen teknisk kunnskap kreves. Vi tar oss av alt — fra oppsett til drift og optimalisering. Du fokuserer på bedriften, vi tar oss av teknologien.' },
+  { q: 'Hva er forskjellen på AI-chatbot og AI-telefoniagent?', a: 'Chatboten kommuniserer skriftlig via nettside, e-post og sosiale medier. Telefoniagenten svarer i telefonen med naturlig talesyntese — perfekt for bedrifter med mange innkommende samtaler.' },
+];
+
+const grid = document.getElementById('faqGrid');
+faqs.forEach((f, i) => {
+  grid.innerHTML += `
+    <div class="faq-item" id="faq-${i}">
+      <div class="faq-q" onclick="toggleFaq(${i})">
+        <span>${f.q}</span>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">${f.a}</div>
+    </div>`;
+});
+
+function toggleFaq(i) {
+  const item = document.getElementById('faq-' + i);
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
